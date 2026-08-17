@@ -6,11 +6,11 @@ on:
       build_type:
         description: 'Select Build Type (release or debug)'
         required: true
-        default: 'release'
+        default: 'debug'
         type: choice
         options:
-          - release
           - debug
+          - release
       app_name:
         description: 'App Name / Blueprint Identifier'
         required: false

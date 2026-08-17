@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BUILD_VARIANT=${1:-release}
+BUILD_VARIANT=${1:-debug}
 APP_NAME=${2:-ClipBoardVault}
 
 echo "=========================================="
@@ -13,13 +13,9 @@ echo "=========================================="
 mkdir -p build/outputs/apk/${BUILD_VARIANT}
 
 if [ -f "./gradlew" ]; then
-    echo "🔨 Found Gradle Wrapper. Building Android APK..."
+    echo "🔨 Found Gradle Wrapper. Building Signed Android APK..."
     chmod +x gradlew
-    if [ "${BUILD_VARIANT}" = "release" ]; then
-        ./gradlew assembleRelease || ./gradlew assembleDebug
-    else
-        ./gradlew assembleDebug
-    fi
+    ./gradlew assembleDebug
 elif [ -f "./index.html" ]; then
     echo "🌐 Found Single Page Web App (index.html). Packaging into Native Android APK via Capacitor..."
     
@@ -38,21 +34,23 @@ elif [ -f "./index.html" ]; then
     npx cap add android
     npx cap sync android
     
-    echo "🔨 Building Android APK with Gradle..."
+    echo "🔨 Building Signed Android APK with Gradle..."
     cd android
     chmod +x gradlew
-    if [ "${BUILD_VARIANT}" = "release" ]; then
-        ./gradlew assembleRelease || ./gradlew assembleDebug
-    else
-        ./gradlew assembleDebug
-    fi
+    # Build assembleDebug so APK is automatically signed with debug keystore
+    ./gradlew assembleDebug
     cd ..
     
-    # Copy build artifact
-    FOUND_APK=$(find android/app/build/outputs/apk -name "*.apk" | head -n 1)
+    # Copy signed debug build artifact (excluding unsigned)
+    FOUND_APK=$(find android/app/build/outputs/apk -name "*debug*.apk" -o -name "app-*.apk" | grep -v "unsigned" | head -n 1)
+    if [ -z "${FOUND_APK}" ]; then
+        FOUND_APK=$(find android/app/build/outputs/apk -name "*.apk" | grep -v "unsigned" | head -n 1)
+    fi
+    
     if [ -n "${FOUND_APK}" ]; then
+        cp "${FOUND_APK}" "build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}.apk"
         cp "${FOUND_APK}" "build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}-${BUILD_VARIANT}.apk"
-        echo "✅ APK generated successfully: build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}-${BUILD_VARIANT}.apk"
+        echo "✅ Signed APK generated successfully: build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}.apk"
     fi
 else
     echo "📦 Custom Build Execution Strategy..."

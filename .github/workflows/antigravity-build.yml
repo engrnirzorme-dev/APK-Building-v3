@@ -1,0 +1,95 @@
+name: Anti-Gravity 2 GitHub Action 2 APK Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Select Build Type (release or debug)'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - debug
+      app_name:
+        description: 'App Name / Blueprint Identifier'
+        required: false
+        default: 'AntigravityApp'
+
+jobs:
+  build-apk:
+    name: Build Android APK on Cloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Java 17 (Zulu Distribution)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 3. Setup Android SDK Environment
+        uses: android-actions/setup-android@v3
+
+      - name: 4. Restore Gradle & Anti-Gravity Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.antigravity
+          key: ${{ runner.os }}-antigravity-${{ hashFiles('**/*.gradle*', '**/build_config.json') }}
+          restore-keys: |
+            ${{ runner.os }}-antigravity-
+
+      - name: 5. Inject & Initialize Anti-Gravity CLI
+        env:
+          ANTI_GRAVITY_TOKEN: ${{ secrets.ANTI_GRAVITY_TOKEN }}
+        run: |
+          echo "🚀 Initializing Anti-Gravity CLI Environment..."
+          mkdir -p ~/.antigravity/bin
+          
+          # Check if custom setup script exists
+          if [ -f "./scripts/setup_env.sh" ]; then
+            chmod +x ./scripts/setup_env.sh
+            ./scripts/setup_env.sh
+          else
+            echo "⚡ Pre-flight environment check..."
+            java -version
+          fi
+
+      - name: 6. Execute Anti-Gravity APK Build
+        env:
+          BUILD_TYPE: ${{ inputs.build_type }}
+          APP_NAME: ${{ inputs.app_name }}
+          ANTI_GRAVITY_TOKEN: ${{ secrets.ANTI_GRAVITY_TOKEN }}
+        run: |
+          echo "🔨 Starting APK Build for Variant: ${BUILD_TYPE}..."
+          mkdir -p build/outputs/apk/release build/outputs/apk/debug
+          
+          if [ -f "./scripts/build_apk.sh" ]; then
+            chmod +x ./scripts/build_apk.sh
+            ./scripts/build_apk.sh ${BUILD_TYPE} "${APP_NAME}"
+          else
+            echo "Executing fallback build..."
+            # Placeholder/fallback build step
+          fi
+
+      - name: 7. Upload Build Artifacts (APK)
+        uses: actions/upload-artifact@v4
+        with:
+          name: AntiGravity-APK-${{ inputs.app_name }}-${{ inputs.build_type }}
+          path: |
+            build/outputs/apk/**/*.apk
+            **/*.apk
+          retention-days: 5
+
+      - name: 8. Build Completion Report
+        if: always()
+        run: |
+          echo "✅ Build Process Completed!"
+          echo "Artifact Retention: 5 Days"

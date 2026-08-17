@@ -1,0 +1,9 @@
+# Build outputs
+build/
+*.apk
+*.aab
+.gradle/
+local.properties
+
+# Temp logs
+*.log

@@ -1,0 +1,11 @@
+{
+  "project_name": "Antigravity 2 GitHub Action 2 APK",
+  "version": "1.0.0",
+  "blueprint_architecture": "Anti-Gravity CI/CD Agent Blueprint",
+  "build_settings": {
+    "default_variant": "release",
+    "target_arch": "arm64-v8a",
+    "java_version": 17,
+    "artifact_retention_days": 5
+  }
+}

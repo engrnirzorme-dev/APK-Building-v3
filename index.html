@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>L9 Swift Vault - Autonomous AI Knowledge Suite (Bulletproof Edition)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#070a13',
+                        cardbg: '#0f172a',
+                        slotbg: '#1e293b',
+                        slotborder: '#334155',
+                        accentCyan: '#38bdf8',
+                        accentPink: '#f472b6',
+                        accentGreen: '#4ade80',
+                        accentRed: '#ef4444',
+                        accentOrange: '#f97316',
+                        accentPurple: '#a855f7',
+                        accentYellow: '#eab308'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #070a13; color: #f8fafc; margin: 0; padding: 0; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+        @keyframes flashAnim {
+            0% { background-color: rgba(74, 222, 128, 0.3); border-color: #4ade80; }
+            100% { background-color: #0f172a; border-color: #38bdf8; }
+        }
+        @keyframes flashDuplicateAnim {
+            0% { background-color: rgba(239, 68, 68, 0.35); border-color: #ef4444; }
+            100% { background-color: #0f172a; border-color: #38bdf8; }
+        }
+        .flash-success { animation: flashAnim 0.3s ease-out; }
+        .flash-duplicate { animation: flashDuplicateAnim 0.4s ease-out; }
+        .drag-active { border-color: #f472b6 !important; background-color: rgba(244, 114, 182, 0.1) !important; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden select-none">
+
+    <!-- Custom Non-Blocking Modal UI -->
+    <div id="customModal" class="fixed inset-0 bg-black/80 z-50 hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-slotborder rounded-2xl p-5 max-w-md w-full space-y-4 shadow-2xl transform transition-all">
+            <h3 id="modalTitle" class="text-sm font-extrabold text-accentCyan flex items-center gap-2"></h3>
+            <p id="modalMessage" class="text-xs text-gray-300 leading-relaxed"></p>
+            <div id="modalInputContainer" class="hidden">
+                <input type="text" id="modalInput" class="w-full bg-slotbg border border-slotborder rounded-lg p-2.5 text-xs text-gray-200 outline-none focus:border-accentCyan">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button id="modalCancelBtn" class="bg-slotbg hover:bg-slate-800 text-gray-400 text-xs px-4 py-2 rounded-lg font-bold border border-slotborder">বাতিল</button>
+                <button id="modalConfirmBtn" class="bg-accentCyan hover:bg-sky-400 text-black text-xs px-4 py-2 rounded-lg font-extrabold shadow">কনফার্ম</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/70 z-40 hidden backdrop-blur-sm transition-opacity"></div>
+
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-72 bg-cardbg border-r border-slotborder z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between shadow-2xl md:shadow-none flex-shrink-0">
+        <div>
+            <div class="p-4 border-b border-slotborder flex items-center justify-between">
+                <div class="flex items-center gap-3 font-extrabold text-base text-accentCyan">
+                    <i class="fa-solid fa-vault text-xl text-accentPink"></i>
+                    <span>L9 SWIFT VAULT <span class="text-[10px] bg-accentPurple/30 text-accentPurple px-2 py-0.5 rounded border border-accentPurple/40 font-mono">BULLETPROOF</span></span>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-accentRed text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-3 bg-black/30 border-b border-slotborder/60">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">স্থায়ী ফায়ারবেস ভল্ট আইডি</span>
+                    <button onclick="promptChangeVaultId()" class="text-[10px] text-accentCyan hover:underline font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-pen-to-square"></i> পরিবর্তন
+                    </button>
+                </div>
+                <div id="vaultId" class="bg-black/60 border border-accentPurple/40 text-accentPink font-mono text-xs p-2 rounded-lg break-all select-all text-center font-bold">
+                    l9-swift-vault-core
+                </div>
+                <div class="text-[9px] text-gray-500 text-center mt-1">সব সেশনে এই আইডি লক থাকবে, ডাটা কখনো হারাবে না</div>
+            </div>
+
+            <nav class="px-3 py-2 space-y-1">
+                <button onclick="switchTab('clipboard')" id="tab-clipboard" class="nav-btn active w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all bg-accentCyan/10 text-accentCyan border-l-4 border-accentCyan">
+                    <i class="fa-solid fa-bolt text-base"></i>
+                    <span>⚡ ১. কুইক ক্লিপবোর্ড ভল্ট</span>
+                </button>
+
+                <button onclick="switchTab('bulksplit')" id="tab-bulksplit" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-cloud-arrow-up text-base text-accentOrange"></i>
+                    <span>📦 ২. ফাইল আপলোড & ইনটেক ল্যাব</span>
+                </button>
+
+                <button onclick="switchTab('ai')" id="tab-ai" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-robot text-base text-accentPink"></i>
+                    <span>🤖 ৩. এআই মাল্টি-টার্ন কোপাইলট</span>
+                </button>
+
+                <button onclick="switchTab('tagmanager')" id="tab-tagmanager" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-tags text-base text-accentGreen"></i>
+                    <span>🏷️ ট্যাগ ম্যানেজার</span>
+                </button>
+
+                <button onclick="switchTab('notes')" id="tab-notes" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-file-pen text-base"></i>
+                    <span>📝 মার্কডাউন নোটস</span>
+                </button>
+
+                <button onclick="switchTab('kanban')" id="tab-kanban" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-list-check text-base"></i>
+                    <span>📋 টাস্ক ক্যানবান</span>
+                </button>
+
+                <button onclick="switchTab('devtools')" id="tab-devtools" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-code text-base"></i>
+                    <span>🛠️ জেসন ও ডেভ টুলস</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="p-3 border-t border-slotborder space-y-2 flex-shrink-0">
+            <div class="bg-slotbg/60 p-2.5 rounded-lg border border-slotborder text-center">
+                <div id="cloudStatus" class="text-xs font-semibold text-gray-400 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-notch fa-spin text-accentOrange"></i>
+                    <span>কানেক্ট হচ্ছে...</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button id="btnPush" onclick="pushToCloud()" disabled class="bg-accentOrange hover:bg-orange-600 disabled:opacity-50 text-white font-bold text-xs py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 shadow">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> সেভ
+                </button>
+                <button id="btnPull" onclick="pullFromCloud()" disabled class="bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white font-bold text-xs py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 shadow">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> স্মার্ট পুল
+                </button>
+            </div>
+
+            <button onclick="exportJSONBackup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 rounded-lg transition-all flex items-center justify-center gap-2 shadow">
+                <i class="fa-solid fa-download"></i> ব্যাকআপ এক্সপোর্ট
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-darkbg">
+        <header class="h-14 border-b border-slotborder bg-cardbg px-4 flex items-center justify-between gap-4 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden text-accentCyan bg-slotbg border border-slotborder p-1.5 rounded-lg text-lg">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 id="viewTitle" class="text-sm md:text-base font-extrabold text-accentCyan flex items-center gap-2">
+                    ⚡ Swift-Catcher SPA
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span id="selectedScopeBadge" class="hidden bg-accentPink/20 text-accentPink border border-accentPink/40 text-xs px-3 py-1 rounded-full font-bold animate-pulse">
+                    🎯 ০ টি সিলেক্টেড
+                </span>
+                <span id="clipCounterBadge" class="bg-sky-600 text-white text-xs px-3 py-1 rounded-full font-bold">
+                    ০ টি ডাটা
+                </span>
+            </div>
+        </header>
+
+        <section id="view-clipboard" class="view-panel flex-1 flex flex-col p-3 md:p-4 overflow-hidden gap-3">
+            <div>
+                <textarea 
+                    id="machineInput" 
+                    class="w-full h-20 md:h-24 bg-cardbg border-2 border-accentCyan rounded-xl p-3 text-xs md:text-sm text-accentGreen font-mono outline-none focus:border-accentPink transition-all resize-none shadow-inner"
+                    placeholder="👉 এখানে কার্সর রেখে টেক্সট পেস্ট (Ctrl+V) করুন, সাথে সাথে ৩ অক্ষরের ইউনিক আইডি ও ট্যাগসহ সেভ হয়ে যাবে (ডুপ্লিকেট স্বয়ংক্রিয়ভাবে প্রতিহত হবে)..."
+                    autofocus
+                ></textarea>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="relative flex-1 min-w-[180px]">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="searchInput" oninput="renderClips()" placeholder="ক্লিপ খুঁজুন (আইডি যেমন 'A01', শিরোনাম, কনটেন্ট বা ট্যাগ দিয়ে)..." class="w-full bg-slotbg border border-slotborder rounded-lg pl-9 pr-3 py-2 text-xs text-gray-200 outline-none focus:border-accentCyan">
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button id="btnAiChatWithSelected" onclick="openAiChatWithSelected()" class="hidden bg-accentPink hover:bg-pink-600 text-white font-extrabold text-xs px-3 py-2 rounded-lg flex items-center gap-1.5 transition shadow">
+                        <i class="fa-solid fa-brain"></i> <span id="selectedAiBtnLabel">সিলেক্টেড ক্লিপ নিয়ে AI চ্যাট</span>
+                    </button>
+                    <button onclick="toggleSelectAllClips()" id="btnSelectAllToggle" class="bg-slotbg hover:bg-slate-700 text-gray-300 border border-slotborder font-bold text-xs px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-check-double"></i> সব সিলেক্ট
+                    </button>
+                    <button onclick="copyAllClips()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-copy"></i> সব কপি
+                    </button>
+                    <button onclick="clearLocalVault()" class="bg-accentRed hover:bg-red-700 text-white font-bold text-xs px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-trash-can"></i> লোকাল ক্লিয়ার
+                    </button>
+                </div>
+            </div>
+
+            <div id="dynamicFilterBar" class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold custom-scrollbar flex-shrink-0"></div>
+
+            <div id="clipsContainer" class="flex-1 overflow-y-auto space-y-3 pr-1 custom-scrollbar"></div>
+        </section>
+
+        <section id="view-bulksplit" class="view-panel hidden flex-1 flex flex-col p-3 md:p-4 overflow-y-auto space-y-4 custom-scrollbar">
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-extrabold text-accentOrange flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> বাল্ক ফাইল আপলোড & মাল্টি-ব্লক ইনটেক ল্যাব
+                    </span>
+                    <span id="bulkParsedBadge" class="text-xs bg-slotbg px-3 py-1 rounded-full text-gray-300 font-bold border border-slotborder">
+                        ০ টি ব্লক প্রস্তুত
+                    </span>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    আপনার কম্পিউটার বা মোবাইল থেকে যেকোনো ফাইল (.txt, .md, .json, .csv, .log) সরাসরি ড্রপ করুন অথবা পেস্ট করুন। পার্সার স্বয়ংক্রিয়ভাবে খালি প্যাডিং ও ট্র্যাশ লাইন বাদ দিয়ে প্রতিটি অর্থপূর্ণ অংশকে আলাদা আলাদা ৩-অক্ষরের কার্ড ব্লকে বিভক্ত করবে। (ইন-প্রগ্রেস ড্রাফট রিলোডে সুরক্ষিত থাকবে)।
+                </p>
+
+                <div id="fileDropZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" class="border-2 border-dashed border-slotborder hover:border-accentOrange bg-slotbg/40 hover:bg-slotbg/70 rounded-xl p-5 text-center transition cursor-pointer flex flex-col items-center justify-center gap-2 shadow-inner">
+                    <i class="fa-solid fa-file-arrow-up text-3xl text-accentOrange"></i>
+                    <div class="text-xs font-bold text-gray-200">এখানে ফাইল ড্র্যাগ & ড্রপ করুন অথবা ব্রাউজ করুন</div>
+                    <div class="text-[10px] text-gray-400">সমর্থিত ফাইল: .txt, .md, .json, .csv, .log (একাধিক ফাইল একসাথে নির্বাচন সম্ভব)</div>
+                    <input type="file" id="fileNativeInput" multiple accept=".txt,.md,.json,.csv,.log,.text" onchange="handleNativeFileSelect(event)" class="hidden">
+                    <button onclick="document.getElementById('fileNativeInput').click()" class="mt-1 bg-accentOrange/20 hover:bg-accentOrange text-accentOrange hover:text-white border border-accentOrange/50 font-bold text-xs px-4 py-1.5 rounded-lg transition">
+                        <i class="fa-solid fa-folder-open"></i> ফাইল নির্বাচন করুন
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <select id="bulkSplitMode" class="bg-slotbg border border-slotborder rounded-lg px-3 py-2 text-xs text-gray-200 outline-none focus:border-accentOrange">
+                        <option value="auto">⚡ অটো-ডিটেক্ট (Tab + Delimiter + Headers)</option>
+                        <option value="delimiter">--- ডেলিমিটার (###---###)</option>
+                        <option value="tabs"># Tab সেকশন (# Tab 1, # Tab 2...)</option>
+                        <option value="double_newline">ডাবল লাইন ব্রেক (\n\n)</option>
+                    </select>
+                    <button onclick="processBulkDocument()" class="bg-accentOrange hover:bg-orange-600 text-white font-extrabold text-xs px-4 py-2 rounded-lg flex items-center gap-2 shadow transition">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> স্মার্ট স্প্লিট চালান
+                    </button>
+                    <button onclick="importAllParsedBulkClips()" id="btnImportBulk" disabled class="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-xs px-4 py-2 rounded-lg flex items-center gap-2 shadow transition">
+                        <i class="fa-solid fa-file-import"></i> সবগুলো ভল্টে যুক্ত করুন
+                    </button>
+                    <button onclick="clearBulkParserArea()" class="bg-slotbg hover:bg-slate-800 text-gray-400 hover:text-white border border-slotborder text-xs px-3 py-2 rounded-lg transition">
+                        ক্লিয়ার
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-gray-300 flex items-center gap-2">
+                        <i class="fa-solid fa-paste"></i> র ডাম্প / ফাইল কনটেন্ট এডিটর
+                    </label>
+                    <textarea id="bulkDocumentInput" oninput="saveBulkDraftLocal()" rows="12" class="w-full bg-cardbg border border-slotborder rounded-xl p-3 text-xs font-mono text-gray-200 outline-none focus:border-accentOrange resize-none shadow-inner custom-scrollbar" placeholder="# Tab 1&#10;&#10;###----------------------------------------###&#10;প্রথম ব্লকের কনটেন্ট এখানে...&#10;&#10;###----------------------------------------###&#10;দ্বিতীয় ব্লকের কনটেন্ট এখানে..."></textarea>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-accentCyan flex items-center justify-between">
+                        <span><i class="fa-solid fa-table-cells-large"></i> প্রিভিউ স্প্লিট ব্লকসমূহ</span>
+                        <span id="bulkParsedCountText" class="text-[11px] text-gray-400 font-normal">কোনো ডাটা প্রসেস হয়নি</span>
+                    </label>
+                    <div id="bulkPreviewContainer" class="flex-1 bg-cardbg/40 border border-slotborder rounded-xl p-3 overflow-y-auto space-y-2.5 max-h-[340px] custom-scrollbar">
+                        <div class="text-gray-500 italic text-center py-16 text-xs">
+                            <i class="fa-solid fa-cubes text-3xl mb-2 text-slotborder block"></i>
+                            ফাইল আপলোড বা ডাম্প পেস্ট করে 'স্মার্ট স্প্লিট চালান' চাপলে আলাদা ব্লকগুলো এখানে দেখা যাবে...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-ai" class="view-panel hidden flex-1 flex flex-col p-3 md:p-4 overflow-hidden gap-3">
+            <div class="flex gap-2 border-b border-slotborder pb-2.5 overflow-x-auto flex-shrink-0">
+                <button onclick="switchAiSubTab('vaultcopilot')" id="ai-sub-vaultcopilot" class="ai-sub-btn active bg-accentCyan/20 text-accentCyan border border-accentCyan/40 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-comments"></i> 🧠 মাল্টি-টার্ন ভল্ট কোপাইলট
+                </button>
+                <button onclick="switchAiSubTab('chat')" id="ai-sub-chat" class="ai-sub-btn bg-slotbg text-gray-400 hover:text-white border border-slotborder px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-globe"></i> সাধারণ AI চ্যাট ও ওয়েব সার্চ
+                </button>
+                <button onclick="switchAiSubTab('image')" id="ai-sub-image" class="ai-sub-btn bg-slotbg text-gray-400 hover:text-white border border-slotborder px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-image"></i> AI ইমেজ জেনারেটর
+                </button>
+                <button onclick="switchAiSubTab('tts')" id="ai-sub-tts" class="ai-sub-btn bg-slotbg text-gray-400 hover:text-white border border-slotborder px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-volume-high"></i> AI টিটিএস ভয়েস
+                </button>
+            </div>
+
+            <div id="aiContextScopeBanner" class="p-2.5 bg-slotbg border border-slotborder rounded-xl flex items-center justify-between text-xs transition-all flex-shrink-0">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-accentCyan"></i>
+                    <span id="aiContextScopeText" class="font-bold text-gray-200">কনটেক্সট মোড লোড হচ্ছে...</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetCopilotChatSession()" class="text-[10px] bg-cardbg hover:bg-slate-800 text-gray-300 border border-slotborder px-2 py-1 rounded font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> নিউ সেশন
+                    </button>
+                    <button onclick="clearClipSelections()" id="btnClearSelectedScope" class="hidden text-[10px] bg-cardbg hover:bg-slate-800 text-accentPink border border-accentPink/30 px-2 py-1 rounded font-bold">
+                        <i class="fa-solid fa-xmark"></i> সিলেকশন মুছুন
+                    </button>
+                </div>
+            </div>
+
+            <div id="ai-sec-vaultcopilot" class="ai-sec-panel flex-1 flex flex-col gap-3 overflow-hidden">
+                <div id="copilotChatFeed" class="flex-1 bg-cardbg/40 border border-slotborder rounded-xl p-3.5 overflow-y-auto text-xs text-gray-200 leading-relaxed space-y-3 custom-scrollbar">
+                    <div class="text-gray-500 italic text-center py-10">
+                        <i class="fa-solid fa-comments text-3xl mb-2 text-slotborder block"></i>
+                        মাল্টি-টার্ন ভল্ট কোপাইলট প্রস্তুত। আপনি ধারাবাহিক কথোপকথন, তুলনা, রিফ্যাক্টরিং বা মার্জ করার নির্দেশ দিন...
+                    </div>
+                </div>
+
+                <div class="bg-cardbg border border-slotborder p-2.5 rounded-xl flex items-center gap-2 flex-shrink-0 shadow-lg">
+                    <textarea id="copilotInput" rows="1" onkeydown="handleCopilotTextareaKey(event)" class="flex-1 bg-slotbg border border-slotborder rounded-lg p-2.5 text-xs text-gray-200 outline-none focus:border-accentCyan resize-none" placeholder="কোপাইলটকে কিছু লিখুন... (যেমন: '[A01] এবং [A03] তুলনা করো' অথবা 'দুটো মার্জ করে নতুন মাস্টার ক্লিপ বানাও')"></textarea>
+                    <button onclick="sendVaultCopilotMessage()" id="btnCopilotSend" class="bg-accentCyan hover:bg-sky-400 text-black font-extrabold text-xs px-4 py-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow transition flex-shrink-0">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="ai-sec-chat" class="ai-sec-panel hidden flex-1 flex flex-col gap-3 overflow-hidden">
+                <div class="flex items-center justify-between bg-cardbg border border-slotborder px-3 py-2 rounded-xl flex-shrink-0">
+                    <span class="text-xs font-bold text-accentCyan flex items-center gap-2">
+                        <i class="fa-solid fa-brain text-accentPink"></i> Gemini General AI Chat
+                    </span>
+                    <label class="flex items-center gap-2 cursor-pointer bg-slotbg px-2.5 py-1 rounded-lg border border-slotborder text-xs text-gray-300">
+                        <input type="checkbox" id="aiUseSearch" class="accent-accentCyan">
+                        <span><i class="fa-solid fa-globe text-accentCyan"></i> Google Live Search</span>
+                    </label>
+                </div>
+
+                <div id="generalChatFeed" class="flex-1 bg-cardbg/40 border border-slotborder rounded-xl p-3.5 overflow-y-auto text-xs text-gray-200 leading-relaxed space-y-3 custom-scrollbar">
+                    <div class="text-gray-500 italic text-center py-10">
+                        <i class="fa-solid fa-robot text-3xl mb-2 text-slotborder block"></i>
+                        সাধারণ জ্ঞান ও লাইভ ওয়েব সার্চ ভিত্তিক চ্যাট সেশন...
+                    </div>
+                </div>
+
+                <div class="bg-cardbg border border-slotborder p-2.5 rounded-xl flex items-center gap-2 flex-shrink-0 shadow-lg">
+                    <textarea id="generalChatInput" rows="1" onkeydown="handleGeneralChatTextareaKey(event)" class="flex-1 bg-slotbg border border-slotborder rounded-lg p-2.5 text-xs text-gray-200 outline-none focus:border-accentPink resize-none" placeholder="Gemini-কে সাধারণ কোনো প্রশ্ন করুন..."></textarea>
+                    <button onclick="sendGeneralChatMessage()" id="btnGeneralChatSend" class="bg-accentPink hover:bg-pink-600 text-white font-extrabold text-xs px-4 py-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow transition flex-shrink-0">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="ai-sec-image" class="ai-sec-panel hidden flex-1 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
+                <div class="bg-cardbg border border-slotborder p-3.5 rounded-xl space-y-3 flex-shrink-0">
+                    <div class="font-bold text-xs text-accentGreen flex items-center gap-2">
+                        <i class="fa-solid fa-palette"></i> Imagen 4.0 Visual Generator
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="aiImagePrompt" class="flex-1 bg-slotbg border border-slotborder rounded-lg px-3 py-2 text-xs text-gray-200 outline-none focus:border-accentGreen" placeholder="ছবির বিবরণ লিখুন (যেমন: A futuristic cybernetic vault room, 4k digital art)...">
+                        <button onclick="runAiImageGen()" id="btnAiImageSend" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-2 shadow">
+                            <i class="fa-solid fa-wand-magic"></i> তৈরি করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div id="aiImageResultContainer" class="flex-1 bg-cardbg/40 border border-slotborder rounded-xl p-4 flex flex-col items-center justify-center min-h-[250px]">
+                    <span class="text-gray-500 text-xs text-center"><i class="fa-solid fa-image text-3xl mb-2 block"></i>তৈরিকৃত ছবি এখানে দেখা যাবে</span>
+                </div>
+            </div>
+
+            <div id="ai-sec-tts" class="ai-sec-panel hidden flex-1 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
+                <div class="bg-cardbg border border-slotborder p-3.5 rounded-xl space-y-3 flex-shrink-0">
+                    <div class="font-bold text-xs text-accentOrange flex items-center justify-between">
+                        <span><i class="fa-solid fa-waveform-lines"></i> Neural AI & Local TTS Voice</span>
+                        <select id="ttsVoiceSelect" class="bg-slotbg border border-slotborder rounded px-2 py-1 text-xs text-gray-200">
+                            <option value="Kore">Kore (Firm)</option>
+                            <option value="Zephyr">Zephyr (Bright)</option>
+                            <option value="Puck">Puck (Upbeat)</option>
+                            <option value="Fenrir">Fenrir (Excitable)</option>
+                            <option value="Aoede">Aoede (Breezy)</option>
+                            <option value="Sulafat">Sulafat (Warm)</option>
+                        </select>
+                    </div>
+                    <textarea id="ttsTextInput" rows="3" class="w-full bg-slotbg border border-slotborder rounded-lg p-3 text-xs text-gray-200 outline-none focus:border-accentOrange resize-none" placeholder="ভয়েস বানানোর টেক্সট পেস্ট বা টাইপ করুন..."></textarea>
+                    <button onclick="runAiTTS()" id="btnTtsSend" class="bg-accentOrange hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-play"></i> ভয়েস জেনারেট ও প্লে করুন
+                    </button>
+                </div>
+
+                <div id="ttsAudioPlayerBox" class="bg-cardbg border border-slotborder p-4 rounded-xl hidden flex-col items-center justify-center gap-3 flex-shrink-0">
+                    <div class="text-xs font-bold text-accentGreen flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i> ভয়েস প্রস্তুত!
+                    </div>
+                    <audio id="ttsAudioElement" controls class="w-full max-w-md"></audio>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-tagmanager" class="view-panel hidden flex-1 flex flex-col p-3 md:p-4 overflow-y-auto space-y-4 custom-scrollbar">
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-extrabold text-accentGreen flex items-center gap-2">
+                        <i class="fa-solid fa-tags"></i> সেন্ট্রালাইজড ট্যাগ ম্যানেজার ও ক্যাসকেডিং সিনক্রোনাইজার
+                    </span>
+                    <span id="totalTagsBadge" class="text-xs bg-slotbg px-3 py-1 rounded-full text-gray-300 font-bold border border-slotborder">
+                        ০ টি ইউনিক ট্যাগ
+                    </span>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    এখানে আপনার ভল্টের সকল ট্যাগ এক নজরে দেখতে পাবেন। যেকোনো ট্যাগ পরিবর্তন (Rename), দুটি ট্যাগ একত্রীকরণ (Merge) অথবা সম্পূর্ণ মুছে ফেলা (Delete) হলে তা সাথে সাথে সকল ক্লিপে স্বয়ংক্রিয়ভাবে আপডেট হয়ে যাবে।
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                    <div class="text-xs font-bold text-accentCyan flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square"></i> ট্যাগ রিনেম / নাম পরিবর্তন (Cascading Rename)
+                    </div>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-bold">বর্তমান ট্যাগ সিলেক্ট করুন</label>
+                            <select id="renameTagSelect" class="w-full bg-slotbg border border-slotborder rounded-lg p-2 text-xs text-gray-200 outline-none focus:border-accentCyan"></select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-bold">নতুন নাম লিখুন</label>
+                            <input type="text" id="renameTagNewName" placeholder="যেমন: code-snippet" class="w-full bg-slotbg border border-slotborder rounded-lg p-2 text-xs text-gray-200 outline-none focus:border-accentCyan">
+                        </div>
+                        <button onclick="executeTagRename()" class="w-full bg-accentCyan hover:bg-sky-500 text-black font-extrabold text-xs py-2 rounded-lg transition shadow">
+                            ক্যাসকেডিং রিনেম অ্যাপ্লাই করুন
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                    <div class="text-xs font-bold text-accentPurple flex items-center gap-2">
+                        <i class="fa-solid fa-code-merge"></i> দুটি ট্যাগ একত্রীকরণ (Merge Tags)
+                    </div>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-bold">উৎস ট্যাগ (যেটি মার্জ হবে)</label>
+                            <select id="mergeSourceTagSelect" class="w-full bg-slotbg border border-slotborder rounded-lg p-2 text-xs text-gray-200 outline-none focus:border-accentPurple"></select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-bold">টার্গেট ট্যাগ (যেটিতে পরিণত হবে)</label>
+                            <select id="mergeTargetTagSelect" class="w-full bg-slotbg border border-slotborder rounded-lg p-2 text-xs text-gray-200 outline-none focus:border-accentPurple"></select>
+                        </div>
+                        <button onclick="executeTagMerge()" class="w-full bg-accentPurple hover:bg-purple-600 text-white font-extrabold text-xs py-2 rounded-lg transition shadow">
+                            ট্যাগ দুটো মার্জ করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="text-xs font-bold text-accentOrange flex items-center justify-between">
+                    <span><i class="fa-solid fa-list"></i> সক্রিয় ট্যাগের তালিকা ও ব্যবহার পরিসংখ্যান</span>
+                    <button onclick="renderTagManager()" class="text-xs text-accentCyan hover:underline"><i class="fa-solid fa-rotate-right"></i> রিফ্রেশ</button>
+                </div>
+                <div id="tagsListGrid" class="flex flex-wrap gap-2 pt-2"></div>
+            </div>
+        </section>
+
+        <section id="view-notes" class="view-panel hidden flex-1 flex flex-col md:flex-row p-3 md:p-4 gap-3 md:gap-4 overflow-hidden">
+            <div class="flex-1 flex flex-col gap-2">
+                <div class="flex justify-between items-center text-xs font-bold text-gray-400">
+                    <span><i class="fa-solid fa-pen-to-square"></i> মার্কডাউন এডিটর</span>
+                    <div class="flex gap-2">
+                        <button onclick="aiGenerateMarkdownDraft()" class="text-accentPink hover:underline text-xs flex items-center gap-1 font-bold">
+                            <i class="fa-solid fa-sparkles"></i> AI ড্রাফট রাইটার
+                        </button>
+                        <button onclick="clearNoteEditor()" class="text-accentRed hover:underline">ক্লিয়ার এডিটর</button>
+                    </div>
+                </div>
+                <textarea id="markdownInput" oninput="updateMarkdownPreview()" class="flex-1 w-full bg-cardbg border border-slotborder rounded-xl p-3 md:p-4 text-xs md:text-sm font-mono text-gray-200 outline-none focus:border-accentCyan resize-none shadow-inner custom-scrollbar" placeholder="# শিরোনাম লিখুন&#10;&#10;এখানে মার্কডাউন কোড বা নোট টাইপ করুন..."></textarea>
+            </div>
+            <div class="flex-1 flex flex-col gap-2 border-t md:border-t-0 md:border-l border-slotborder pt-3 md:pt-0 md:pl-4">
+                <div class="text-xs font-bold text-accentCyan flex items-center gap-2">
+                    <i class="fa-solid fa-eye"></i> লাইভ প্রাকদর্শন (Preview)
+                </div>
+                <div id="markdownPreview" class="flex-1 bg-cardbg/50 border border-slotborder rounded-xl p-3 md:p-4 overflow-y-auto text-xs md:text-sm text-gray-300 space-y-2 custom-scrollbar">
+                    <p class="text-gray-500 italic">বাম পাশে মার্কডাউন টাইপ করলে এখানে ফলাফল দেখা যাবে...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-kanban" class="view-panel hidden flex-1 flex flex-col p-3 md:p-4 overflow-hidden gap-3">
+            <div class="flex items-center gap-2">
+                <input type="text" id="kanbanTaskInput" placeholder="নতুন টাস্ক লিখুন..." class="flex-1 bg-slotbg border border-slotborder rounded-lg px-3 py-2 text-xs text-gray-200 outline-none focus:border-accentCyan">
+                <button onclick="addKanbanTask()" class="bg-accentPurple hover:bg-purple-700 text-white font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i> টাস্ক যোগ করুন
+                </button>
+            </div>
+
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 overflow-y-auto custom-scrollbar">
+                <div class="bg-cardbg border border-slotborder rounded-xl p-3 flex flex-col gap-2.5">
+                    <div class="font-extrabold text-xs text-accentOrange flex justify-between items-center border-b border-slotborder pb-2">
+                        <span><i class="fa-solid fa-circle-dot"></i> করণীয় (To Do)</span>
+                        <span id="todoCount" class="bg-slotbg px-2 py-0.5 rounded-full">০</span>
+                    </div>
+                    <div id="kanban-todo" class="flex-1 space-y-2 overflow-y-auto custom-scrollbar min-h-[140px]"></div>
+                </div>
+
+                <div class="bg-cardbg border border-slotborder rounded-xl p-3 flex flex-col gap-2.5">
+                    <div class="font-extrabold text-xs text-accentCyan flex justify-between items-center border-b border-slotborder pb-2">
+                        <span><i class="fa-solid fa-spinner"></i> চলমান (In Progress)</span>
+                        <span id="progressCount" class="bg-slotbg px-2 py-0.5 rounded-full">০</span>
+                    </div>
+                    <div id="kanban-progress" class="flex-1 space-y-2 overflow-y-auto custom-scrollbar min-h-[140px]"></div>
+                </div>
+
+                <div class="bg-cardbg border border-slotborder rounded-xl p-3 flex flex-col gap-2.5">
+                    <div class="font-extrabold text-xs text-accentGreen flex justify-between items-center border-b border-slotborder pb-2">
+                        <span><i class="fa-solid fa-circle-check"></i> সম্পন্ন (Done)</span>
+                        <span id="doneCount" class="bg-slotbg px-2 py-0.5 rounded-full">০</span>
+                    </div>
+                    <div id="kanban-done" class="flex-1 space-y-2 overflow-y-auto custom-scrollbar min-h-[140px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-devtools" class="view-panel hidden flex-1 flex flex-col p-3 md:p-4 overflow-y-auto space-y-4 md:space-y-6 custom-scrollbar">
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="font-bold text-sm text-accentCyan flex items-center justify-between">
+                    <span><i class="fa-solid fa-code"></i> JSON Beautifier & Minifier</span>
+                    <div class="flex gap-2">
+                        <button onclick="formatJSON()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-3 py-1 rounded">Format</button>
+                        <button onclick="minifyJSON()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3 py-1 rounded">Minify</button>
+                    </div>
+                </div>
+                <textarea id="jsonInput" rows="5" class="w-full bg-slotbg border border-slotborder rounded-lg p-3 text-xs font-mono text-gray-200 outline-none focus:border-accentCyan" placeholder="এখানে কাঁচা JSON পেস্ট করুন..."></textarea>
+            </div>
+
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="font-bold text-sm text-accentPink flex items-center justify-between">
+                    <span><i class="fa-solid fa-lock"></i> Base64 Encoder & Decoder</span>
+                    <div class="flex gap-2">
+                        <button onclick="encodeBase64()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1 rounded">Encode</button>
+                        <button onclick="decodeBase64()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs px-3 py-1 rounded">Decode</button>
+                    </div>
+                </div>
+                <textarea id="base64Input" rows="4" class="w-full bg-slotbg border border-slotborder rounded-lg p-3 text-xs font-mono text-gray-200 outline-none focus:border-accentPink" placeholder="টেক্সট পেস্ট করুন এনকোড বা ডিকোড করতে..."></textarea>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-accentGreen text-darkbg font-black text-xs px-4 py-2.5 rounded-xl shadow-2xl z-50 transition-all opacity-0 pointer-events-none transform translate-y-4">
+        নোটিফিকেশন বার্তা
+    </div>
+
+    <!-- Custom Modal Helpers & Handlers -->
+    <script>
+        window.showCustomConfirm = function(title, message, onConfirm) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-accentOrange"></i> ${title}`;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('modalInputContainer').classList.add('hidden');
+            
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            
+            const cleanup = () => {
+                modal.classList.add('hidden');
+            };
+
+            cancelBtn.onclick = () => { cleanup(); };
+            confirmBtn.onclick = () => {
+                cleanup();
+                if (onConfirm) onConfirm();
+            };
+            modal.classList.remove('hidden');
+        };
+
+        window.showCustomPrompt = function(title, message, defaultValue, onSubmit) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-accentCyan"></i> ${title}`;
+            document.getElementById('modalMessage').innerText = message;
+            
+            const inputContainer = document.getElementById('modalInputContainer');
+            const input = document.getElementById('modalInput');
+            inputContainer.classList.remove('hidden');
+            input.value = defaultValue || '';
+            
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            
+            const cleanup = () => {
+                modal.classList.add('hidden');
+            };
+
+            cancelBtn.onclick = () => { cleanup(); };
+            confirmBtn.onclick = () => {
+                const val = input.value.trim();
+                cleanup();
+                if (onSubmit && val) onSubmit(val);
+            };
+            modal.classList.remove('hidden');
+            setTimeout(() => input.focus(), 100);
+        };
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const DEFAULT_FIXED_VAULT_ID = "l9-swift-vault-core";
+        let currentVaultId = localStorage.getItem('l9_fixed_custom_vault_id') || DEFAULT_FIXED_VAULT_ID;
+
+        window.currentVaultId = currentVaultId;
+        document.getElementById('vaultId').innerText = currentVaultId;
+
+        const STORAGE_KEY = `l9_vault_clips_${currentVaultId}`;
+        const KANBAN_KEY = `l9_vault_kanban_${currentVaultId}`;
+        const NOTES_KEY = `l9_vault_notes_${currentVaultId}`;
+        const COPILOT_HIST_KEY = `l9_vault_copilot_hist_${currentVaultId}`;
+        const GEN_CHAT_HIST_KEY = `l9_vault_genchat_hist_${currentVaultId}`;
+        const BULK_DRAFT_KEY = `l9_vault_bulk_draft_${currentVaultId}`;
+        const COLLECTION_NAME = "vault_data";
+
+        window.clipsList = [];
+        window.parsedBulkClips = [];
+        window.kanbanTasks = [];
+        window.activeFilter = 'all';
+        window.selectedClipIds = new Set();
+        window.copilotHistory = [];
+        window.generalChatHistory = [];
+        window.isDirty = false;
+        let db = null;
+        let currentUser = null;
+        let captureLock = false;
+
+        window.addEventListener('beforeunload', (e) => {
+            if (window.isDirty) {
+                e.preventDefault();
+                e.returnValue = 'আপনার কিছু পরিবর্তন ক্লাউডে সেভ করা হয়নি। আপনি কি সত্যিই পেজ রিলোড বা বন্ধ করতে চান?';
+            }
+        });
+
+        function generateShortId(index) {
+            const letterCode = String.fromCharCode(65 + (Math.floor(index / 99) % 26));
+            const numCode = ((index % 99) + 1).toString().padStart(2, '0');
+            return `${letterCode}${numCode}`;
+        }
+
+        function normalizeClips(rawList) {
+            if (!Array.isArray(rawList)) return [];
+            return rawList.map((item, idx) => {
+                if (typeof item === 'string') {
+                    const classified = classifyTextHeuristic(item);
+                    return {
+                        id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                        shortId: generateShortId(rawList.length - 1 - idx),
+                        text: item.trim(),
+                        title: generateTitle(item),
+                        category: classified.category,
+                        tags: classified.tags,
+                        pinned: false,
+                        createdAt: new Date().toISOString()
+                    };
+                }
+                return {
+                    id: item.id || Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                    shortId: item.shortId || generateShortId(rawList.length - 1 - idx),
+                    text: item.text || '',
+                    title: item.title || generateTitle(item.text || ''),
+                    category: item.category || 'note',
+                    tags: Array.isArray(item.tags) ? item.tags : [item.category || 'note'],
+                    pinned: Boolean(item.pinned),
+                    createdAt: item.createdAt || new Date().toISOString()
+                };
+            });
+        }
+
+        window.reindexShortIds = function() {
+            const total = window.clipsList.length;
+            window.clipsList.forEach((clip, idx) => {
+                clip.shortId = generateShortId(total - 1 - idx);
+            });
+        }
+
+        window.generateTitle = function(text) {
+            let firstLine = (text || '').trim().split('\n')[0].replace(/^#+\s*/, '').trim();
+            let words = firstLine.split(/\s+/);
+            if (words.length > 6) return words.slice(0, 6).join(' ') + '...';
+            return firstLine || "নতুন ক্লিপ";
+        }
+
+        window.classifyTextHeuristic = function(text) {
+            const trimmed = (text || '').trim();
+            const tags = [];
+            let primaryCat = 'note';
+
+            if (/^(https?:\/\/[^\s]+)$/i.test(trimmed)) {
+                primaryCat = 'link';
+                tags.push('link', 'web');
+            } else if (/(\b(function|const|let|var|class|import|export|def|return|async|await|select|from|where)\b|<[a-z/][\s\S]*>|=>|[{};])/i.test(trimmed)) {
+                primaryCat = 'snippet';
+                tags.push('snippet', 'code');
+            } else if (/(\b(prompt|system instruction|act as|you are|translate|summarize)\b)/i.test(trimmed)) {
+                primaryCat = 'prompt';
+                tags.push('prompt', 'ai');
+            } else if (/(\b(report|summary|analysis|findings|overview|critique|review)\b)/i.test(trimmed)) {
+                primaryCat = 'report';
+                tags.push('report', 'doc');
+            } else if (/(\b(config|env|host|port|api_key|secret|database)\b)/i.test(trimmed)) {
+                primaryCat = 'config';
+                tags.push('config', 'system');
+            } else if (/(\b(architecture|blueprint|decision|protocol|framework|governance)\b)/i.test(trimmed)) {
+                primaryCat = 'architecture';
+                tags.push('architecture', 'design');
+            } else {
+                primaryCat = 'note';
+                tags.push('note');
+            }
+
+            return { category: primaryCat, tags: Array.from(new Set(tags)).slice(0, 3) };
+        }
+
+        function restoreChatFeed(containerId, history) {
+            const feed = document.getElementById(containerId);
+            if (!feed || !Array.isArray(history) || history.length === 0) return;
+            feed.innerHTML = '';
+            history.forEach(item => {
+                const text = item.parts?.[0]?.text || '';
+                if (item.role === 'user') {
+                    appendUserBubble(feed, text);
+                } else if (item.role === 'model') {
+                    let actionBlock = null;
+                    const match = text.match(/```json_action\s*([\s\S]*?)\s*```/);
+                    let cleanText = text;
+                    if (match && match[1]) {
+                        try {
+                            actionBlock = JSON.parse(match[1]);
+                            cleanText = cleanText.replace(/```json_action[\s\S]*?```/, '').trim();
+                        } catch (e) {}
+                    }
+                    appendAssistantBubble(feed, cleanText, actionBlock);
+                }
+            });
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function loadLocalData() {
+            try {
+                const savedClips = localStorage.getItem(STORAGE_KEY);
+                window.clipsList = savedClips ? normalizeClips(JSON.parse(savedClips)) : [];
+                window.reindexShortIds();
+
+                const savedKanban = localStorage.getItem(KANBAN_KEY);
+                window.kanbanTasks = savedKanban ? JSON.parse(savedKanban) : [];
+
+                const savedNotes = localStorage.getItem(NOTES_KEY);
+                if (savedNotes) {
+                    document.getElementById('markdownInput').value = savedNotes;
+                    updateMarkdownPreview();
+                }
+
+                const savedBulkDraft = localStorage.getItem(BULK_DRAFT_KEY);
+                if (savedBulkDraft) {
+                    document.getElementById('bulkDocumentInput').value = savedBulkDraft;
+                }
+
+                const savedCopilotHist = localStorage.getItem(COPILOT_HIST_KEY);
+                if (savedCopilotHist) {
+                    window.copilotHistory = JSON.parse(savedCopilotHist);
+                    restoreChatFeed('copilotChatFeed', window.copilotHistory);
+                }
+
+                const savedGenHist = localStorage.getItem(GEN_CHAT_HIST_KEY);
+                if (savedGenHist) {
+                    window.generalChatHistory = JSON.parse(savedGenHist);
+                    restoreChatFeed('generalChatFeed', window.generalChatHistory);
+                }
+            } catch (e) {
+                window.clipsList = [];
+            }
+        }
+
+        window.saveLocalClips = function() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(window.clipsList));
+                window.isDirty = true;
+                updateCloudStatusWarning();
+            } catch (e) {
+                showToast("⚠️ মেমোরি কোটা পূর্ণ! ব্যাকআপ ডাউনলোড করে ফাইল হালকা করুন");
+                exportJSONBackup();
+            }
+        }
+
+        window.saveLocalKanban = function() {
+            try {
+                localStorage.setItem(KANBAN_KEY, JSON.stringify(window.kanbanTasks));
+                window.isDirty = true;
+                updateCloudStatusWarning();
+            } catch (e) {}
+        }
+
+        window.saveBulkDraftLocal = function() {
+            try {
+                const val = document.getElementById('bulkDocumentInput').value;
+                localStorage.setItem(BULK_DRAFT_KEY, val);
+            } catch (e) {}
+        }
+
+        window.saveCopilotHistoryLocal = function() {
+            try {
+                localStorage.setItem(COPILOT_HIST_KEY, JSON.stringify(window.copilotHistory));
+            } catch (e) {}
+        }
+
+        window.saveGeneralChatHistoryLocal = function() {
+            try {
+                localStorage.setItem(GEN_CHAT_HIST_KEY, JSON.stringify(window.generalChatHistory));
+            } catch (e) {}
+        }
+
+        function updateCloudStatusWarning() {
+            const statusEl = document.getElementById('cloudStatus');
+            statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-accentOrange"></i> <span>আনসিঙ্কড পরিবর্তন</span>`;
+        }
+
+        async function initFirebase() {
+            const statusEl = document.getElementById('cloudStatus');
+            try {
+                let config = {};
+                if (typeof __firebase_config !== 'undefined') {
+                    config = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
+                } else {
+                    // Fallback to local offline mode gracefully
+                    statusEl.innerHTML = `<i class="fa-solid fa-hard-drive text-gray-400"></i> <span>লোকাল মেমোরি মোড</span>`;
+                    return;
+                }
+                const app = initializeApp(config);
+                const auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        statusEl.innerHTML = `<i class="fa-solid fa-cloud-check text-accentGreen"></i> <span>ক্লাউড রেডি</span>`;
+                        document.getElementById('btnPush').disabled = false;
+                        document.getElementById('btnPull').disabled = false;
+                    }
+                });
+            } catch (err) {
+                statusEl.innerHTML = `<i class="fa-solid fa-hard-drive text-gray-400"></i> <span>লোকাল মেমোরি মোড</span>`;
+            }
+        }
+
+        window.pushToCloud = async function() {
+            if (!db || !currentUser) return showToast("ডাটাবেস কানেক্টেড নয়!");
+            const statusEl = document.getElementById('cloudStatus');
+            statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-accentCyan"></i> <span>সেভ হচ্ছে...</span>`;
+
+            try {
+                const payloadObj = {
+                    clips: window.clipsList,
+                    kanban: window.kanbanTasks,
+                    notes: document.getElementById('markdownInput').value || '',
+                    updatedAt: new Date().toISOString()
+                };
+
+                const payloadString = JSON.stringify(payloadObj);
+                if (payloadString.length > 850000) {
+                    showToast("⚠️ পে-লোড সাইজ ৮৫০KB ছাড়িয়েছে! ফায়ারস্টোর লিমিট (১MB) এড়াতে JSON ব্যাকআপ রাখুন");
+                }
+
+                const docRef = doc(db, 'artifacts', window.currentVaultId, 'public', 'data', COLLECTION_NAME, 'master_backup');
+                await setDoc(docRef, payloadObj, { merge: true });
+
+                window.isDirty = false;
+                if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+                showToast("✅ ক্লাউডে সফলভাবে সেভ হয়েছে!");
+                statusEl.innerHTML = `<i class="fa-solid fa-cloud-check text-accentGreen"></i> <span>Synched & Secured</span>`;
+            } catch (err) {
+                showToast("❌ ক্লাউড সেভ ব্যর্থ!");
+                statusEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-accentRed"></i> <span>সিঙ্ক ত্রুটি</span>`;
+            }
+        }
+
+        window.pullFromCloud = async function() {
+            if (!db || !currentUser) return showToast("ডাটাবেস কানেক্টেড নয়!");
+            const statusEl = document.getElementById('cloudStatus');
+            statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-accentCyan"></i> <span>স্মার্ট সিঙ্ক হচ্ছে...</span>`;
+
+            try {
+                const docRef = doc(db, 'artifacts', window.currentVaultId, 'public', 'data', COLLECTION_NAME, 'master_backup');
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists() && docSnap.data()) {
+                    const data = docSnap.data();
+                    
+                    if (data.clips && Array.isArray(data.clips)) {
+                        const localMap = new Map();
+                        window.clipsList.forEach(c => localMap.set(c.text.trim(), c));
+                        data.clips.forEach(cloudClip => {
+                            const hash = cloudClip.text.trim();
+                            if (!localMap.has(hash)) {
+                                localMap.set(hash, cloudClip);
+                            }
+                        });
+                        window.clipsList = normalizeClips(Array.from(localMap.values()));
+                    }
+
+                    window.reindexShortIds();
+
+                    if (data.kanban && Array.isArray(data.kanban)) {
+                        const kanbanMap = new Map();
+                        window.kanbanTasks.forEach(k => kanbanMap.set(k.text.trim(), k));
+                        data.kanban.forEach(k => {
+                            const hash = k.text.trim();
+                            if (!kanbanMap.has(hash)) {
+                                kanbanMap.set(hash, k);
+                            }
+                        });
+                        window.kanbanTasks = Array.from(kanbanMap.values());
+                    }
+
+                    if (data.notes && !document.getElementById('markdownInput').value) {
+                        document.getElementById('markdownInput').value = data.notes;
+                        updateMarkdownPreview();
+                    }
+
+                    saveLocalClips();
+                    saveLocalKanban();
+                    renderClips();
+                    renderKanban();
+                    renderTagManager();
+                    updateContextScopeBanner();
+
+                    window.isDirty = false;
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    showToast("✅ ক্লাউড ও লোকাল ডাটা সফলভাবে মার্জ হয়েছে (কোনো ডাটা হারায়নি)!");
+                    statusEl.innerHTML = `<i class="fa-solid fa-cloud-check text-accentGreen"></i> <span>Synched & Secured</span>`;
+                } else {
+                    showToast("ক্লাউডে কোনো ব্যাকআপ পাওয়া যায়নি!");
+                    statusEl.innerHTML = `<i class="fa-solid fa-cloud-check text-accentGreen"></i> <span>ক্লাউড রেডি</span>`;
+                }
+            } catch (err) {
+                showToast("❌ ডাটা পুল করতে সমস্যা হয়েছে!");
+                statusEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-accentRed"></i> <span>সিঙ্ক ত্রুটি</span>`;
+            }
+        }
+
+        window.promptChangeVaultId = function() {
+            showCustomPrompt(
+                "ফায়ারবেস ভল্ট আইডি পরিবর্তন",
+                "আপনার কাস্টম ভল্ট আইডি লিখুন (যাতে সব ডিভাইসে একই ডাটা লোড হয়):",
+                window.currentVaultId,
+                (newId) => {
+                    localStorage.setItem('l9_fixed_custom_vault_id', newId);
+                    window.location.reload();
+                }
+            );
+        }
+
+        const machineInput = document.getElementById('machineInput');
+        function handleCapture() {
+            if (captureLock) return;
+            const val = machineInput.value;
+            if (val && val.trim().length > 0) {
+                captureLock = true;
+                const trimmed = val.trim();
+
+                const existingItem = window.clipsList.find(c => c.text.trim() === trimmed);
+                if (existingItem) {
+                    machineInput.value = '';
+                    machineInput.classList.add('flash-duplicate');
+                    setTimeout(() => machineInput.classList.remove('flash-duplicate'), 400);
+                    if (navigator.vibrate) navigator.vibrate([80, 50, 80]);
+                    showToast(`⚠️ হুবহু একই ক্লিপ ইতিমধ্যে [${existingItem.shortId}] এ সংরক্ষিত আছে!`);
+                    captureLock = false;
+                    return;
+                }
+
+                const classified = window.classifyTextHeuristic(trimmed);
+                const nextIdx = window.clipsList.length;
+                const newClip = {
+                    id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                    shortId: generateShortId(nextIdx),
+                    text: trimmed,
+                    title: window.generateTitle(trimmed),
+                    category: classified.category,
+                    tags: classified.tags,
+                    pinned: false,
+                    createdAt: new Date().toISOString()
+                };
+
+                window.clipsList.unshift(newClip);
+                window.reindexShortIds();
+                saveLocalClips();
+                machineInput.value = '';
+                renderClips();
+                renderTagManager();
+                updateContextScopeBanner();
+
+                machineInput.classList.add('flash-success');
+                setTimeout(() => machineInput.classList.remove('flash-success'), 300);
+                if (navigator.vibrate) navigator.vibrate(40);
+                showToast(`✅ নতুন ক্লিপ [${newClip.shortId}] সংরক্ষিত হয়েছে!`);
+                captureLock = false;
+            }
+        }
+
+        machineInput.addEventListener('input', handleCapture);
+        machineInput.addEventListener('paste', () => setTimeout(handleCapture, 15));
+
+        loadLocalData();
+        renderClips();
+        renderKanban();
+        renderTagManager();
+        updateContextScopeBanner();
+        initFirebase();
+    </script>
+
+    <script>
+        async function callGeminiMultiTurn(contentsArray, systemInstruction = "", useSearch = false, responseSchema = null) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: contentsArray
+            };
+
+            if (systemInstruction) {
+                payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+            }
+
+            if (useSearch) {
+                payload.tools = [{ "google_search": {} }];
+            }
+
+            if (responseSchema) {
+                payload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: responseSchema
+                };
+            }
+
+            let retries = 0;
+            while (retries < 3) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error(`API Error status: ${res.status}`);
+                    const data = await res.json();
+                    const candidate = data.candidates?.[0];
+                    const text = candidate?.content?.parts?.[0]?.text || '';
+                    
+                    let sources = [];
+                    const grounding = candidate?.groundingMetadata?.groundingAttributions;
+                    if (grounding) {
+                        sources = grounding.map(a => ({ uri: a.web?.uri, title: a.web?.title })).filter(s => s.uri && s.title);
+                    }
+                    return { text, sources };
+                } catch (e) {
+                    retries++;
+                    if (retries >= 3) throw e;
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, retries)));
+                }
+            }
+        }
+
+        async function callGeminiImage(prompt) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+            const payload = {
+                instances: [{ prompt: prompt }],
+                parameters: { sampleCount: 1 }
+            };
+
+            let retries = 0;
+            while (retries < 3) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error(`Image API Error status: ${res.status}`);
+                    const data = await res.json();
+                    if (data.predictions && data.predictions[0]?.bytesBase64Encoded) {
+                        return `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`;
+                    }
+                    throw new Error("No image data found");
+                } catch (e) {
+                    retries++;
+                    if (retries >= 3) throw e;
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, retries)));
+                }
+            }
+        }
+
+        async function callGeminiTTS(text, voiceName = "Kore") {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: text }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: voiceName }
+                        }
+                    }
+                }
+            };
+
+            let retries = 0;
+            while (retries < 3) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error(`TTS Error status: ${res.status}`);
+                    const data = await res.json();
+                    const part = data?.candidates?.[0]?.content?.parts?.[0];
+                    const audioData = part?.inlineData?.data;
+                    const mimeType = part?.inlineData?.mimeType;
+
+                    if (audioData && mimeType) {
+                        const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                        const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
+                        const pcmBuffer = base64ToArrayBuffer(audioData);
+                        const pcm16 = new Int16Array(pcmBuffer);
+                        const wavBlob = pcmToWav(pcm16, sampleRate);
+                        return URL.createObjectURL(wavBlob);
+                    }
+                    throw new Error("Invalid TTS payload");
+                } catch (e) {
+                    retries++;
+                    if (retries >= 3) throw e;
+                    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, retries)));
+                }
+            }
+        }
+
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function pcmToWav(pcm16, sampleRate = 24000, numChannels = 1) {
+            const buffer = new ArrayBuffer(44 + pcm16.length * 2);
+            const view = new DataView(buffer);
+
+            const writeString = (v, offset, str) => {
+                for (let i = 0; i < str.length; i++) v.setUint8(offset + i, str.charCodeAt(i));
+            };
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + pcm16.length * 2, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numChannels * 2, true);
+            view.setUint16(32, numChannels * 2, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, pcm16.length * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < pcm16.length; i++, offset += 2) {
+                view.setInt16(offset, pcm16[i], true);
+            }
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+    </script>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-panel').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-accentCyan/10', 'text-accentCyan', 'border-l-4', 'border-accentCyan');
+                el.classList.add('text-gray-400');
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-accentCyan/10', 'text-accentCyan', 'border-l-4', 'border-accentCyan');
+                activeBtn.classList.remove('text-gray-400');
+            }
+
+            const titleMap = {
+                'clipboard': '⚡ কুইক ক্লিপবোর্ড ভল্ট',
+                'bulksplit': '📦 বাল্ক ফাইল আপলোড & ইনটেক ল্যাব',
+                'ai': '🤖 এআই মাল্টি-টার্ন কোপাইলট কনসোল',
+                'tagmanager': '🏷️ সেন্ট্রালাইজড ট্যাগ ম্যানেজার',
+                'notes': '📝 মার্কডাউন নোটস ও ড্রাফট',
+                'kanban': '📋 ক্যানবান টাস্ক বোর্ড',
+                'devtools': '🛠️ জেসন ও ডেভেলপার টুলস'
+            };
+            document.getElementById('viewTitle').innerText = titleMap[tabId] || 'L9 Swift Vault';
+
+            if (tabId === 'tagmanager') {
+                renderTagManager();
+            } else if (tabId === 'ai') {
+                updateContextScopeBanner();
+            }
+
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        function switchAiSubTab(subId) {
+            document.querySelectorAll('.ai-sec-panel').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.ai-sub-btn').forEach(el => {
+                el.classList.remove('bg-accentCyan/20', 'text-accentCyan', 'border-accentCyan/40', 'bg-accentPink/20', 'text-accentPink', 'border-accentPink/40');
+                el.classList.add('bg-slotbg', 'text-gray-400', 'border-slotborder');
+            });
+
+            document.getElementById(`ai-sec-${subId}`).classList.remove('hidden');
+            const btn = document.getElementById(`ai-sub-${subId}`);
+            btn.classList.remove('bg-slotbg', 'text-gray-400', 'border-slotborder');
+            btn.classList.add('bg-accentCyan/20', 'text-accentCyan', 'border-accentCyan/40');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('fileDropZone').classList.add('drag-active');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('fileDropZone').classList.remove('drag-active');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('fileDropZone').classList.remove('drag-active');
+            const files = e.dataTransfer ? e.dataTransfer.files : null;
+            if (files && files.length > 0) {
+                readUploadedFiles(files);
+            }
+        }
+
+        function handleNativeFileSelect(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                readUploadedFiles(files);
+            }
+        }
+
+        function readUploadedFiles(files) {
+            let loadedCount = 0;
+            const total = files.length;
+            const inputArea = document.getElementById('bulkDocumentInput');
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const text = event.target.result;
+                    if (file.name.endsWith('.json')) {
+                        try {
+                            const parsed = JSON.parse(text);
+                            if (parsed.clips && Array.isArray(parsed.clips)) {
+                                parsed.clips.forEach(c => {
+                                    if (c.text) {
+                                        inputArea.value += `\n\n###----------------------------------------###\n${c.text}\n`;
+                                    }
+                                });
+                            } else {
+                                inputArea.value += `\n\n###----------------------------------------###\n${text}\n`;
+                            }
+                        } catch (err) {
+                            inputArea.value += `\n\n###----------------------------------------###\n${text}\n`;
+                        }
+                    } else {
+                        inputArea.value += `\n\n###----------------------------------------###\n${text}\n`;
+                    }
+
+                    loadedCount++;
+                    if (loadedCount === total) {
+                        saveBulkDraftLocal();
+                        showToast(`✅ ${total}টি ফাইল সফলভাবে লোড হয়েছে! এবার 'স্মার্ট স্প্লিট চালান' চাপুন।`);
+                        processBulkDocument();
+                    }
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        function processBulkDocument() {
+            const raw = document.getElementById('bulkDocumentInput').value;
+            const mode = document.getElementById('bulkSplitMode').value;
+            if (!raw || raw.trim().length === 0) return showToast("ফাইল আপলোড বা টেক্সট পেস্ট করুন!");
+
+            let rawBlocks = [];
+
+            if (mode === 'delimiter') {
+                rawBlocks = raw.split(/###[-=~_]+###/);
+            } else if (mode === 'tabs') {
+                rawBlocks = raw.split(/(?=#\s*Tab\s*\d+)/i);
+            } else if (mode === 'double_newline') {
+                rawBlocks = raw.split(/\n\s*\n\s*\n/);
+            } else {
+                rawBlocks = raw.split(/(?:###[-=~_]+###|(?=#\s*Tab\s*\d+))/i);
+            }
+
+            const cleanBlocks = [];
+            rawBlocks.forEach(blk => {
+                const cleaned = blk.trim().replace(/^#\s*Tab\s*\d+/i, '').trim();
+                if (cleaned.length >= 10) {
+                    cleanBlocks.push(cleaned);
+                }
+            });
+
+            if (cleanBlocks.length === 0) {
+                return showToast("কোনো বৈধ কনটেন্ট ব্লক পাওয়া যায়নি!");
+            }
+
+            window.parsedBulkClips = cleanBlocks.map((content, idx) => {
+                const classified = window.classifyTextHeuristic(content);
+                return {
+                    id: Date.now().toString() + Math.random().toString(36).substr(2, 4) + idx,
+                    tempIndex: idx + 1,
+                    text: content,
+                    title: window.generateTitle(content),
+                    category: classified.category,
+                    tags: classified.tags
+                };
+            });
+
+            renderBulkPreviews();
+            if (navigator.vibrate) navigator.vibrate(40);
+            showToast(`✅ ${window.parsedBulkClips.length}টি ব্লক শনাক্ত করা হয়েছে!`);
+        }
+
+        function renderBulkPreviews() {
+            const container = document.getElementById('bulkPreviewContainer');
+            const badge = document.getElementById('bulkParsedBadge');
+            const countText = document.getElementById('bulkParsedCountText');
+            const importBtn = document.getElementById('btnImportBulk');
+
+            container.innerHTML = '';
+            const total = window.parsedBulkClips.length;
+            badge.innerText = `${total} টি ব্লক প্রস্তুত`;
+            countText.innerText = `${total}টি ব্লক পার্স করা হয়েছে`;
+            importBtn.disabled = total === 0;
+
+            if (total === 0) {
+                container.innerHTML = `<div class="text-gray-500 italic text-center py-16 text-xs">কোনো ব্লক প্রস্তুত নেই</div>`;
+                return;
+            }
+
+            const escapeHTML = str => (str || '').replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag]));
+
+            window.parsedBulkClips.forEach((item, i) => {
+                const card = document.createElement('div');
+                card.className = "bg-slotbg border border-slotborder rounded-lg p-3 text-xs space-y-1.5 shadow-sm";
+                const tagsHtml = (item.tags || []).map(t => `<span class="text-[9px] px-1.5 py-0.5 rounded bg-black/40 text-accentCyan border border-slotborder font-mono">#${escapeHTML(t)}</span>`).join(' ');
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between font-bold text-accentPink border-b border-slotborder/40 pb-1">
+                        <span class="flex items-center gap-2">
+                            <span>[ব্লক #${i + 1}]</span>
+                            <span class="text-gray-200 truncate max-w-[180px]">${escapeHTML(item.title)}</span>
+                        </span>
+                        <button onclick="removeBulkParsedItem(${i})" class="text-gray-400 hover:text-accentRed"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="text-[11px] font-mono text-gray-300 line-clamp-3 whitespace-pre-wrap">${escapeHTML(item.text.slice(0, 200))}...</div>
+                    <div class="flex items-center justify-between text-[10px] text-gray-400 pt-1">
+                        <div>${tagsHtml}</div>
+                        <span>${item.text.length} অক্ষর</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function removeBulkParsedItem(index) {
+            window.parsedBulkClips.splice(index, 1);
+            renderBulkPreviews();
+        }
+
+        function clearBulkParserArea() {
+            document.getElementById('bulkDocumentInput').value = '';
+            localStorage.removeItem(`l9_vault_bulk_draft_${window.currentVaultId}`);
+            window.parsedBulkClips = [];
+            renderBulkPreviews();
+            showToast("বাল্ক এডিটর ক্লিয়ার করা হয়েছে!");
+        }
+
+        function importAllParsedBulkClips() {
+            if (!window.parsedBulkClips || window.parsedBulkClips.length === 0) return;
+
+            let addedCount = 0;
+            let duplicateCount = 0;
+
+            window.parsedBulkClips.forEach(item => {
+                const trimmed = item.text.trim();
+                const existing = window.clipsList.find(c => c.text.trim() === trimmed);
+                if (!existing) {
+                    window.clipsList.unshift({
+                        id: item.id || Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                        shortId: "TMP",
+                        text: trimmed,
+                        title: item.title,
+                        category: item.category,
+                        tags: item.tags,
+                        pinned: false,
+                        createdAt: new Date().toISOString()
+                    });
+                    addedCount++;
+                } else {
+                    duplicateCount++;
+                }
+            });
+
+            window.reindexShortIds();
+            saveLocalClips();
+            renderClips();
+            renderTagManager();
+            updateContextScopeBanner();
+
+            window.parsedBulkClips = [];
+            renderBulkPreviews();
+            document.getElementById('bulkDocumentInput').value = '';
+            localStorage.removeItem(`l9_vault_bulk_draft_${window.currentVaultId}`);
+
+            if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+            showToast(`✅ ${addedCount}টি নতুন ব্লক ভল্টে সংরক্ষিত হয়েছে! (${duplicateCount}টি ডুপ্লিকেট বাদ)`);
+            switchTab('clipboard');
+        }
+
+        function toggleClipSelection(id, event) {
+            if (event) event.stopPropagation();
+            if (window.selectedClipIds.has(id)) {
+                window.selectedClipIds.delete(id);
+            } else {
+                window.selectedClipIds.add(id);
+            }
+            updateSelectionUi();
+        }
+
+        function toggleSelectAllClips() {
+            const currentList = window.clipsList || [];
+            if (window.selectedClipIds.size === currentList.length && currentList.length > 0) {
+                window.selectedClipIds.clear();
+                showToast("সকল সিলেকশন সরানো হয়েছে!");
+            } else {
+                currentList.forEach(c => window.selectedClipIds.add(c.id));
+                showToast(`সকল (${currentList.length}টি) ক্লিপ সিলেক্ট করা হয়েছে!`);
+            }
+            updateSelectionUi();
+        }
+
+        function clearClipSelections() {
+            window.selectedClipIds.clear();
+            updateSelectionUi();
+            showToast("সিলেকশন মুছা হয়েছে (ফুল ভল্ট মোড সক্রিয়)!");
+        }
+
+        function updateSelectionUi() {
+            const count = window.selectedClipIds.size;
+            const badge = document.getElementById('selectedScopeBadge');
+            const aiBtn = document.getElementById('btnAiChatWithSelected');
+            const selectAllBtn = document.getElementById('btnSelectAllToggle');
+            const label = document.getElementById('selectedAiBtnLabel');
+
+            if (count > 0) {
+                badge.classList.remove('hidden');
+                badge.innerText = `🎯 ${count} টি সিলেক্টেড`;
+                aiBtn.classList.remove('hidden');
+                label.innerText = `${count}টি ক্লিপ নিয়ে AI চ্যাট`;
+                selectAllBtn.innerHTML = `<i class="fa-solid fa-xmark"></i> আন-সিলেক্ট`;
+            } else {
+                badge.classList.add('hidden');
+                aiBtn.classList.add('hidden');
+                selectAllBtn.innerHTML = `<i class="fa-solid fa-check-double"></i> সব সিলেক্ট`;
+            }
+
+            document.querySelectorAll('.clip-checkbox').forEach(cb => {
+                const clipId = cb.getAttribute('data-clip-id');
+                cb.checked = window.selectedClipIds.has(clipId);
+                const card = document.getElementById(`clip-card-${clipId}`);
+                if (card) {
+                    if (cb.checked) {
+                        card.classList.add('ring-2', 'ring-accentPink');
+                    } else {
+                        card.classList.remove('ring-2', 'ring-accentPink');
+                    }
+                }
+            });
+
+            updateContextScopeBanner();
+        }
+
+        function openAiChatWithSelected() {
+            switchTab('ai');
+            switchAiSubTab('vaultcopilot');
+        }
+
+        function updateContextScopeBanner() {
+            const bannerText = document.getElementById('aiContextScopeText');
+            const clearBtn = document.getElementById('btnClearSelectedScope');
+            const count = window.selectedClipIds ? window.selectedClipIds.size : 0;
+
+            if (count > 0) {
+                const selectedClips = (window.clipsList || []).filter(c => window.selectedClipIds.has(c.id));
+                const shortIdList = selectedClips.map(c => `[${c.shortId}]`).join(', ');
+                bannerText.innerHTML = `<span class="text-accentPink">🔒 আইসোলেটেড স্কোপ্ড মোড:</span> ${count}টি নির্দিষ্ট ক্লিপ সিলেক্টেড (${shortIdList}) — নো হ্যালুসিনেশন গ্যারান্টি`;
+                clearBtn.classList.remove('hidden');
+            } else {
+                bannerText.innerHTML = `<span class="text-accentCyan">🌐 সম্পূর্ণ ভল্ট মোড:</span> মোট ${(window.clipsList || []).length}টি ক্লিপ স্ক্যান হবে (নির্দিষ্ট ক্লিপ সিলেক্ট করতে ক্লিপবোর্ডে যান)`;
+                clearBtn.classList.add('hidden');
+            }
+        }
+
+        function getAllUniqueTagsWithCounts() {
+            const counts = {};
+            (window.clipsList || []).forEach(clip => {
+                const tags = Array.isArray(clip.tags) ? clip.tags : [clip.category || 'note'];
+                tags.forEach(t => {
+                    if (t) {
+                        const normalized = t.toLowerCase().trim();
+                        counts[normalized] = (counts[normalized] || 0) + 1;
+                    }
+                });
+            });
+            return counts;
+        }
+
+        function setFilter(tag, btn) {
+            window.activeFilter = tag;
+            renderClips();
+        }
+
+        function renderDynamicFilterBar() {
+            const bar = document.getElementById('dynamicFilterBar');
+            if (!bar) return;
+            bar.innerHTML = '';
+
+            const tagCounts = getAllUniqueTagsWithCounts();
+            const allBtn = document.createElement('button');
+            allBtn.onclick = () => setFilter('all', allBtn);
+            allBtn.className = `filter-tab px-3 py-1.5 rounded-full border transition-all ${window.activeFilter === 'all' ? 'bg-accentCyan text-black border-accentCyan font-bold' : 'bg-slotbg text-gray-400 border-slotborder hover:text-white'}`;
+            allBtn.innerText = `সবগুলো (${window.clipsList.length})`;
+            bar.appendChild(allBtn);
+
+            const pinnedBtn = document.createElement('button');
+            pinnedBtn.onclick = () => setFilter('pinned', pinnedBtn);
+            pinnedBtn.className = `filter-tab px-3 py-1.5 rounded-full border transition-all ${window.activeFilter === 'pinned' ? 'bg-accentOrange text-black border-accentOrange font-bold' : 'bg-slotbg text-gray-400 border-slotborder hover:text-white'}`;
+            pinnedBtn.innerText = `📌 পিনড`;
+            bar.appendChild(pinnedBtn);
+
+            Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]).forEach(tag => {
+                const btn = document.createElement('button');
+                btn.onclick = () => setFilter(tag, btn);
+                const isActive = window.activeFilter === tag;
+                btn.className = `filter-tab px-3 py-1.5 rounded-full border transition-all whitespace-nowrap ${isActive ? 'bg-accentPink text-black border-accentPink font-bold' : 'bg-slotbg text-gray-300 border-slotborder hover:text-white'}`;
+                btn.innerText = `#${tag} (${tagCounts[tag]})`;
+                bar.appendChild(btn);
+            });
+        }
+
+        function renderClips() {
+            const container = document.getElementById('clipsContainer');
+            const searchVal = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            container.innerHTML = '';
+
+            renderDynamicFilterBar();
+
+            let filtered = (window.clipsList || []).filter(item => {
+                const itemTags = Array.isArray(item.tags) ? item.tags.join(' ').toLowerCase() : (item.category || '');
+                const matchSearch = item.shortId.toLowerCase().includes(searchVal) || item.text.toLowerCase().includes(searchVal) || item.title.toLowerCase().includes(searchVal) || itemTags.includes(searchVal);
+                if (!matchSearch) return false;
+                if (window.activeFilter === 'pinned') return item.pinned;
+                if (window.activeFilter !== 'all') {
+                    return Array.isArray(item.tags) && item.tags.map(t => t.toLowerCase()).includes(window.activeFilter.toLowerCase());
+                }
+                return true;
+            });
+
+            filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+            document.getElementById('clipCounterBadge').innerText = `${window.clipsList.length} টি ডাটা`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fa-solid fa-box-open text-4xl mb-2"></i>
+                        <p class="text-xs">কোনো ক্লিপ পাওয়া যায়নি</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach((item, index) => {
+                const isSelected = window.selectedClipIds.has(item.id);
+                const card = document.createElement('details');
+                card.id = `clip-card-${item.id}`;
+                card.className = `bg-slotbg border-l-4 ${item.pinned ? 'border-accentOrange bg-slate-800/80' : 'border-accentCyan'} rounded-xl overflow-hidden shadow-lg transition-all ${isSelected ? 'ring-2 ring-accentPink' : ''}`;
+                if (index === 0) card.open = true;
+
+                const escapeHTML = str => (str || '').replace(/[&<>'"]/g, tag => ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+                }[tag]));
+
+                const tagsHtml = (item.tags || [item.category || 'note']).map(t => `<span class="text-[9px] px-1.5 py-0.5 rounded bg-black/40 text-accentCyan border border-slotborder font-mono">#${escapeHTML(t)}</span>`).join(' ');
+
+                card.innerHTML = `
+                    <summary class="p-3 bg-cardbg cursor-pointer flex items-center justify-between text-xs font-bold gap-2 select-none border-b border-slotborder/50 hover:bg-slate-800">
+                        <div class="flex items-center gap-2.5 overflow-hidden flex-1 min-w-0">
+                            <input type="checkbox" data-clip-id="${item.id}" ${isSelected ? 'checked' : ''} onclick="toggleClipSelection('${item.id}', event)" class="clip-checkbox accent-accentPink w-4 h-4 rounded cursor-pointer flex-shrink-0" title="AI কনটেক্সটে সিলেক্ট করুন">
+                            <span class="text-accentPink font-mono font-black tracking-wider flex-shrink-0 bg-black/60 px-2 py-0.5 rounded border border-accentPink/30">[${item.shortId}]</span>
+                            <span class="truncate text-gray-200">${item.pinned ? '📌 ' : ''}${escapeHTML(item.title)}</span>
+                            <div class="flex items-center gap-1 flex-shrink-0">${tagsHtml}</div>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0" onclick="event.stopPropagation()">
+                            <button onclick="togglePin('${item.id}')" title="Pin" class="p-1.5 rounded hover:bg-slate-700 text-gray-400 ${item.pinned ? 'text-accentOrange' : ''}"><i class="fa-solid fa-thumbtack"></i></button>
+                            <button onclick="copySingleText('${item.id}')" title="Copy" class="p-1.5 rounded hover:bg-slate-700 text-gray-400 hover:text-accentCyan"><i class="fa-solid fa-copy"></i></button>
+                            <button onclick="deleteClip('${item.id}')" title="Delete" class="p-1.5 rounded hover:bg-slate-700 text-gray-400 hover:text-accentRed"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </summary>
+                    <div class="p-4 text-xs font-mono text-gray-300 whitespace-pre-wrap break-words leading-relaxed select-text bg-slotbg">
+                        ${escapeHTML(item.text)}
+                    </div>
+                    <div class="px-4 py-2 bg-slate-900/80 border-t border-slotborder/60 flex flex-wrap gap-2 items-center text-[11px] font-bold text-gray-400">
+                        <span class="text-accentPink"><i class="fa-solid fa-sparkles"></i> AI টুলস:</span>
+                        <button onclick="aiSummarizeClip('${item.id}')" class="hover:text-accentCyan bg-slotbg hover:bg-slate-800 px-2 py-1 rounded border border-slotborder">✨ সারসংক্ষেপ</button>
+                        <button onclick="aiTranslateClip('${item.id}')" class="hover:text-accentGreen bg-slotbg hover:bg-slate-800 px-2 py-1 rounded border border-slotborder">🌐 অনুবাদ</button>
+                        <button onclick="aiConvertToTask('${item.id}')" class="hover:text-accentOrange bg-slotbg hover:bg-slate-800 px-2 py-1 rounded border border-slotborder">📋 টাস্কে রূপান্তর</button>
+                        <button onclick="aiReadAloudClip('${item.id}')" class="hover:text-accentYellow bg-slotbg hover:bg-slate-800 px-2 py-1 rounded border border-slotborder">🔊 শোনাও</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            updateSelectionUi();
+        }
+
+        function renderTagManager() {
+            const counts = getAllUniqueTagsWithCounts();
+            const totalBadge = document.getElementById('totalTagsBadge');
+            const grid = document.getElementById('tagsListGrid');
+            const renameSelect = document.getElementById('renameTagSelect');
+            const mergeSource = document.getElementById('mergeSourceTagSelect');
+            const mergeTarget = document.getElementById('mergeTargetTagSelect');
+
+            const uniqueKeys = Object.keys(counts).sort();
+            totalBadge.innerText = `${uniqueKeys.length} টি ইউনিক ট্যাগ`;
+
+            renameSelect.innerHTML = uniqueKeys.map(k => `<option value="${k}">${k} (${counts[k]} টি ক্লিপ)</option>`).join('');
+            mergeSource.innerHTML = uniqueKeys.map(k => `<option value="${k}">${k} (${counts[k]} টি ক্লিপ)</option>`).join('');
+            mergeTarget.innerHTML = uniqueKeys.map(k => `<option value="${k}">${k} (${counts[k]} টি ক্লিপ)</option>`).join('');
+
+            grid.innerHTML = '';
+            if (uniqueKeys.length === 0) {
+                grid.innerHTML = `<span class="text-xs text-gray-500 italic">কোনো ট্যাগ পাওয়া যায়নি।</span>`;
+                return;
+            }
+
+            uniqueKeys.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = "bg-slotbg border border-slotborder rounded-lg p-2.5 flex items-center justify-between gap-3 text-xs shadow-sm hover:border-accentCyan transition";
+                tagEl.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-accentCyan">#${tag}</span>
+                        <span class="text-[10px] bg-black/40 text-gray-400 px-1.5 py-0.5 rounded">${counts[tag]}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="quickFilterByTag('${tag}')" title="এই ট্যাগের ক্লিপ দেখুন" class="text-gray-400 hover:text-accentGreen p-1"><i class="fa-solid fa-filter"></i></button>
+                        <button onclick="deleteTagGlobally('${tag}')" title="ট্যাগটি সম্পূর্ণ মুছে ফেলুন" class="text-gray-400 hover:text-accentRed p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                grid.appendChild(tagEl);
+            });
+        }
+
+        function quickFilterByTag(tag) {
+            window.activeFilter = tag;
+            switchTab('clipboard');
+        }
+
+        function executeTagRename() {
+            const oldTag = document.getElementById('renameTagSelect').value;
+            const newTag = document.getElementById('renameTagNewName').value.toLowerCase().trim();
+
+            if (!oldTag || !newTag) return showToast("সঠিক ট্যাগ নাম দিন!");
+            if (oldTag === newTag) return showToast("বর্তমান ও নতুন নাম একই!");
+
+            let affectedCount = 0;
+            window.clipsList.forEach(clip => {
+                if (Array.isArray(clip.tags) && clip.tags.includes(oldTag)) {
+                    clip.tags = clip.tags.map(t => t === oldTag ? newTag : t);
+                    clip.tags = Array.from(new Set(clip.tags));
+                    if (clip.category === oldTag) clip.category = newTag;
+                    affectedCount++;
+                }
+            });
+
+            saveLocalClips();
+            renderClips();
+            renderTagManager();
+            document.getElementById('renameTagNewName').value = '';
+            showToast(`✅ '${oldTag}' ট্যাগটি '${newTag}'-এ পরিবর্তিত হয়েছে (${affectedCount}টি ক্লিপে)`);
+        }
+
+        function executeTagMerge() {
+            const sourceTag = document.getElementById('mergeSourceTagSelect').value;
+            const targetTag = document.getElementById('mergeTargetTagSelect').value;
+
+            if (!sourceTag || !targetTag) return showToast("ট্যাগ সিলেক্ট করুন!");
+            if (sourceTag === targetTag) return showToast("উৎস এবং টার্গেট ট্যাগ আলাদা হতে হবে!");
+
+            showCustomConfirm(
+                "ট্যাগ একত্রীকরণ (Merge Tags)",
+                `আপনি কি '${sourceTag}' ট্যাগটিকে '${targetTag}' ট্যাগে রূপান্তর করতে চান?`,
+                () => {
+                    let affectedCount = 0;
+                    window.clipsList.forEach(clip => {
+                        if (Array.isArray(clip.tags) && clip.tags.includes(sourceTag)) {
+                            clip.tags = clip.tags.filter(t => t !== sourceTag);
+                            clip.tags.push(targetTag);
+                            clip.tags = Array.from(new Set(clip.tags));
+                            if (clip.category === sourceTag) clip.category = targetTag;
+                            affectedCount++;
+                        }
+                    });
+
+                    saveLocalClips();
+                    renderClips();
+                    renderTagManager();
+                    showToast(`✅ '${sourceTag}' সফলভাবে '${targetTag}'-এ মার্জ হয়েছে (${affectedCount}টি ক্লিপে)`);
+                }
+            );
+        }
+
+        function deleteTagGlobally(tag) {
+            showCustomConfirm(
+                "ট্যাগ মোছা (Global Delete)",
+                `আপনি কি '${tag}' ট্যাগটি সকল ক্লিপ থেকে মুছে ফেলতে চান?`,
+                () => {
+                    let count = 0;
+                    window.clipsList.forEach(clip => {
+                        if (Array.isArray(clip.tags) && clip.tags.includes(tag)) {
+                            clip.tags = clip.tags.filter(t => t !== tag);
+                            if (clip.tags.length === 0) clip.tags = ['note'];
+                            if (clip.category === tag) clip.category = clip.tags[0];
+                            count++;
+                        }
+                    });
+
+                    saveLocalClips();
+                    renderClips();
+                    renderTagManager();
+                    showToast(`🗑️ '${tag}' ট্যাগটি ${count}টি ক্লিপ থেকে মুছে ফেলা হয়েছে`);
+                }
+            );
+        }
+
+        function handleCopilotTextareaKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendVaultCopilotMessage();
+            }
+        }
+
+        function handleGeneralChatTextareaKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendGeneralChatMessage();
+            }
+        }
+
+        function resetCopilotChatSession() {
+            window.copilotHistory = [];
+            localStorage.removeItem(`l9_vault_copilot_hist_${window.currentVaultId}`);
+            const feed = document.getElementById('copilotChatFeed');
+            feed.innerHTML = `
+                <div class="text-gray-500 italic text-center py-10">
+                    <i class="fa-solid fa-comments text-3xl mb-2 text-slotborder block"></i>
+                    নতুন মাল্টি-টার্ন সেশন শুরু হয়েছে। যেকোনো প্রশ্ন বা মার্জ কমান্ড দিন...
+                </div>
+            `;
+            showToast("নতুন কোপাইলট সেশন শুরু হয়েছে!");
+        }
+
+        async function sendVaultCopilotMessage() {
+            const input = document.getElementById('copilotInput');
+            const prompt = input.value.trim();
+            if (!prompt) return;
+
+            input.value = '';
+            const feed = document.getElementById('copilotChatFeed');
+
+            if (window.copilotHistory.length === 0) {
+                feed.innerHTML = '';
+            }
+
+            appendUserBubble(feed, prompt);
+
+            const loadingId = 'loading-' + Date.now();
+            appendLoadingBubble(feed, loadingId, 'কোপাইলট চিন্তা করছে...');
+            feed.scrollTop = feed.scrollHeight;
+
+            let targetClips = window.clipsList || [];
+            const isScoped = window.selectedClipIds && window.selectedClipIds.size > 0;
+            if (isScoped) {
+                targetClips = targetClips.filter(c => window.selectedClipIds.has(c.id));
+            }
+
+            const vaultPayload = targetClips.map(c => {
+                return `[SHORT_ID: ${c.shortId}] [ID: ${c.id}] Title: ${c.title} | Tags: ${(c.tags || []).join(',')} | Content: ${c.text}`;
+            }).join('\n\n---\n\n');
+
+            const systemInstruction = `You are the Anti-Hallucination Scoped Vault Copilot for L9 Swift Vault.
+You have EXCLUSIVE access ONLY to the provided clips below (${isScoped ? 'SCOPED ISOLATED MODE' : 'FULL VAULT MODE'}).
+Do NOT hallucinate or refer to clips not present in the provided list.
+Always refer to clips by their exact 3-character Short ID like [A01], [A02].
+You are operating in a STATEFUL MULTI-TURN CONVERSATION. Keep full continuity of previous messages.
+When asked to MERGE or COMBINE clips, synthesize them into a clean, comprehensive master clip and provide a JSON action block at the end inside triple backticks with tag \`json_action\`:
+\`\`\`json_action
+{
+  "action": "MERGE",
+  "source_short_ids": ["A01", "A02"],
+  "merged_title": "Title for merged clip",
+  "merged_category": "snippet",
+  "merged_tags": ["snippet", "report"],
+  "merged_content": "Full combined and synthesized clean text"
+}
+\`\`\`
+Answer in fluent clear Bengali.
+
+CURRENT VAULT CLIPS:
+${vaultPayload}`;
+
+            window.copilotHistory.push({
+                role: "user",
+                parts: [{ text: prompt }]
+            });
+
+            try {
+                const res = await callGeminiMultiTurn(window.copilotHistory, systemInstruction);
+                removeLoadingBubble(loadingId);
+
+                let responseText = res.text;
+                let actionBlock = null;
+                const match = responseText.match(/```json_action\s*([\s\S]*?)\s*```/);
+                if (match && match[1]) {
+                    try {
+                        actionBlock = JSON.parse(match[1]);
+                        responseText = responseText.replace(/```json_action[\s\S]*?```/, '').trim();
+                    } catch (e) {}
+                }
+
+                window.copilotHistory.push({
+                    role: "model",
+                    parts: [{ text: res.text }]
+                });
+                saveCopilotHistoryLocal();
+
+                appendAssistantBubble(feed, responseText, actionBlock);
+                feed.scrollTop = feed.scrollHeight;
+            } catch (e) {
+                removeLoadingBubble(loadingId);
+                appendAssistantBubble(feed, "❌ কোপাইলট রেসপন্স পেতে ব্যর্থ হয়েছে! আবার চেষ্টা করুন।", null);
+            }
+        }
+
+        async function sendGeneralChatMessage() {
+            const input = document.getElementById('generalChatInput');
+            const useSearch = document.getElementById('aiUseSearch').checked;
+            const prompt = input.value.trim();
+            if (!prompt) return;
+
+            input.value = '';
+            const feed = document.getElementById('generalChatFeed');
+
+            if (window.generalChatHistory.length === 0) {
+                feed.innerHTML = '';
+            }
+
+            appendUserBubble(feed, prompt);
+
+            const loadingId = 'loading-gen-' + Date.now();
+            appendLoadingBubble(feed, loadingId, useSearch ? 'Gemini ওয়েব সার্চ ও এনালাইসিস করছে...' : 'Gemini চিন্তা করছে...');
+            feed.scrollTop = feed.scrollHeight;
+
+            window.generalChatHistory.push({
+                role: "user",
+                parts: [{ text: prompt }]
+            });
+
+            const systemInstruction = "You are Gemini AI Assistant inside L9 Vault Suite. Answer in fluent Bengali with clear markdown formatting.";
+
+            try {
+                const res = await callGeminiMultiTurn(window.generalChatHistory, systemInstruction, useSearch);
+                removeLoadingBubble(loadingId);
+
+                window.generalChatHistory.push({
+                    role: "model",
+                    parts: [{ text: res.text }]
+                });
+                saveGeneralChatHistoryLocal();
+
+                let sourcesHtml = '';
+                if (res.sources && res.sources.length > 0) {
+                    sourcesHtml = `
+                        <div class="mt-2.5 pt-2 border-t border-slotborder text-[10px]">
+                            <div class="font-bold text-accentCyan mb-1"><i class="fa-solid fa-link"></i> ওয়েব তথ্যসূত্র:</div>
+                            <ul class="list-disc pl-4 space-y-0.5 text-gray-400">
+                                ${res.sources.map(s => `<li><a href="${s.uri}" target="_blank" class="hover:underline text-sky-400">${s.title}</a></li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+
+                appendAssistantBubble(feed, res.text + sourcesHtml, null);
+                feed.scrollTop = feed.scrollHeight;
+            } catch (e) {
+                removeLoadingBubble(loadingId);
+                appendAssistantBubble(feed, "❌ উত্তর পেতে সমস্যা হয়েছে! আবার চেষ্টা করুন।", null);
+            }
+        }
+
+        function appendUserBubble(container, text) {
+            const escapeHTML = str => (str || '').replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag]));
+
+            const bubble = document.createElement('div');
+            bubble.className = "flex justify-end gap-2";
+            bubble.innerHTML = `
+                <div class="max-w-[85%] bg-accentCyan/15 border border-accentCyan/30 rounded-2xl rounded-tr-none p-3 text-xs text-gray-100 whitespace-pre-wrap leading-relaxed shadow">
+                    ${escapeHTML(text)}
+                </div>
+                <div class="w-7 h-7 rounded-full bg-accentCyan/20 text-accentCyan flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            `;
+            container.appendChild(bubble);
+        }
+
+        function appendAssistantBubble(container, text, actionBlock) {
+            const bubble = document.createElement('div');
+            bubble.className = "flex justify-start gap-2";
+
+            let actionUi = '';
+            if (actionBlock && actionBlock.action === "MERGE" && Array.isArray(actionBlock.source_short_ids)) {
+                const actionDataStr = encodeURIComponent(JSON.stringify(actionBlock));
+                actionUi = `
+                    <div class="mt-3 p-3 bg-cardbg border-2 border-accentCyan rounded-xl space-y-2.5 shadow-lg">
+                        <div class="font-bold text-accentCyan flex items-center justify-between text-xs">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-code-merge text-accentPink"></i> প্রস্তাবিত অটো-মার্জ অ্যাকশন</span>
+                            <span class="text-[9px] bg-slotbg px-2 py-0.5 rounded text-gray-300">স্মার্ট ইনটেন্ট</span>
+                        </div>
+                        <div class="text-[11px] text-gray-300 space-y-1 bg-slotbg/60 p-2.5 rounded-lg border border-slotborder">
+                            <div><b>নতুন মাস্টার শিরোনাম:</b> ${actionBlock.merged_title}</div>
+                            <div><b>টার্গেট সোর্স ক্লিপস:</b> ${actionBlock.source_short_ids.map(s => `<span class="text-accentPink font-mono font-bold">[${s}]</span>`).join(', ')}</div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <button onclick="applyCopilotMergeByShortIds('${actionDataStr}', false)" class="flex-1 bg-accentCyan hover:bg-sky-400 text-black font-extrabold text-[11px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 shadow transition">
+                                <i class="fa-solid fa-copy"></i> মার্জ করুন + আগেরগুলো অক্ষত রাখুন
+                            </button>
+                            <button onclick="applyCopilotMergeByShortIds('${actionDataStr}', true)" class="flex-1 bg-accentRed hover:bg-red-600 text-white font-extrabold text-[11px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 shadow transition">
+                                <i class="fa-solid fa-trash-can"></i> মার্জ করুন + আগেরগুলো মুছে দিন
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const parsedText = typeof marked !== 'undefined' ? marked.parse(text) : text;
+
+            bubble.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-accentPink/20 text-accentPink flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="max-w-[90%] bg-slotbg border border-slotborder rounded-2xl rounded-tl-none p-3 text-xs text-gray-200 leading-relaxed shadow space-y-2">
+                    <div class="prose prose-invert max-w-none text-xs leading-relaxed space-y-1.5">${parsedText}</div>
+                    ${actionUi}
+                    <div class="flex justify-end pt-1">
+                        <button onclick="fallbackCopy(\`${text.replace(/`/g, '\\\\`')}\`, 'উত্তর কপি হয়েছে!')" class="text-[10px] text-gray-400 hover:text-white flex items-center gap-1">
+                            <i class="fa-solid fa-copy"></i> কপি
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(bubble);
+        }
+
+        function appendLoadingBubble(container, id, msg) {
+            const bubble = document.createElement('div');
+            bubble.id = id;
+            bubble.className = "flex justify-start gap-2";
+            bubble.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-accentPink/20 text-accentPink flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                </div>
+                <div class="bg-slotbg border border-slotborder rounded-2xl rounded-tl-none p-3 text-xs text-accentCyan flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>${msg}</span>
+                </div>
+            `;
+            container.appendChild(bubble);
+        }
+
+        function removeLoadingBubble(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        window.applyCopilotMergeByShortIds = function(encodedData, deleteOriginals) {
+            try {
+                const action = JSON.parse(decodeURIComponent(encodedData));
+                if (!action.merged_content) return showToast("মার্জ কনটেন্ট অনুপস্থিত!");
+
+                const sourceShortIds = (action.source_short_ids || []).map(s => s.replace(/[\\[\\]]/g, '').trim().toUpperCase());
+                const nextIdx = window.clipsList.length;
+
+                const newClip = {
+                    id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                    shortId: "TMP",
+                    text: action.merged_content.trim(),
+                    title: action.merged_title || window.generateTitle(action.merged_content),
+                    category: action.merged_category || 'note',
+                    tags: Array.isArray(action.merged_tags) ? action.merged_tags : [action.merged_category || 'note'],
+                    pinned: true,
+                    createdAt: new Date().toISOString()
+                };
+
+                if (deleteOriginals) {
+                    window.clipsList = window.clipsList.filter(c => !sourceShortIds.includes(c.shortId.toUpperCase()));
+                }
+
+                window.clipsList.unshift(newClip);
+                window.reindexShortIds();
+
+                window.selectedClipIds.clear();
+                saveLocalClips();
+                renderClips();
+                renderTagManager();
+                updateContextScopeBanner();
+
+                if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+                if (deleteOriginals) {
+                    showToast(`✅ ${sourceShortIds.length}টি ক্লিপ মার্জ হয়েছে এবং পুরনো ক্লিপগুলো মুছে ফেলা হয়েছে!`);
+                } else {
+                    showToast(`✅ নতুন মার্জড মাস্টার ক্লিপ [${newClip.shortId}] তৈরি হয়েছে (আগেরগুলো অক্ষত আছে)!`);
+                }
+                switchTab('clipboard');
+            } catch (e) {
+                showToast("❌ মার্জ এক্সিকিউশনে সমস্যা হয়েছে!");
+            }
+        }
+
+        async function aiSummarizeClip(id) {
+            const clip = window.clipsList.find(c => c.id === id);
+            if (!clip) return;
+            showToast("⏳ Gemini AI সারসংক্ষেপ তৈরি করছে...");
+            try {
+                const prompt = `সংক্ষেপে ৩-৪টি বুলেট পয়েন্টে নিচের টেক্সটের সারসংক্ষেপ করুন বাংলায়:\n\n${clip.text}`;
+                const res = await callGeminiMultiTurn([{ role: "user", parts: [{ text: prompt }] }], "You are a precise summarizing assistant.");
+                
+                switchTab('ai');
+                switchAiSubTab('vaultcopilot');
+                const feed = document.getElementById('copilotChatFeed');
+                if (window.copilotHistory.length === 0) feed.innerHTML = '';
+                appendAssistantBubble(feed, `**ক্লিপ [${clip.shortId}] এর সারসংক্ষেপ:**\n\n${res.text}`, null);
+            } catch (e) {
+                showToast("❌ AI প্রসেসিং এ সমস্যা হয়েছে!");
+            }
+        }
+
+        async function aiTranslateClip(id) {
+            const clip = window.clipsList.find(c => c.id === id);
+            if (!clip) return;
+            showToast("⏳ অনুবাদ করা হচ্ছে...");
+            try {
+                const prompt = `Translate the following text into fluent Bengali (if it is English) or into English (if it is Bengali):\n\n${clip.text}`;
+                const res = await callGeminiMultiTurn([{ role: "user", parts: [{ text: prompt }] }]);
+                
+                switchTab('ai');
+                switchAiSubTab('vaultcopilot');
+                const feed = document.getElementById('copilotChatFeed');
+                if (window.copilotHistory.length === 0) feed.innerHTML = '';
+                appendAssistantBubble(feed, `**ক্লিপ [${clip.shortId}] এর অনুবাদ:**\n\n${res.text}`, null);
+            } catch (e) {
+                showToast("❌ অনুবাদে সমস্যা হয়েছে!");
+            }
+        }
+
+        async function aiConvertToTask(id) {
+            const clip = window.clipsList.find(c => c.id === id);
+            if (!clip) return;
+            showToast("⏳ টাস্ক লিস্ট জেনারেট হচ্ছে...");
+            try {
+                const schema = {
+                    type: "ARRAY",
+                    items: {
+                        type: "OBJECT",
+                        properties: {
+                            "taskTitle": { "type": "STRING" }
+                        },
+                        required: ["taskTitle"]
+                    }
+                };
+                const prompt = `নিচের টেক্সট থেকে প্রয়োজনীয় ২-৩টি অ্যাকশনেবল টাস্ক টাইটেল তৈরি করুন:\n\n${clip.text}`;
+                const res = await callGeminiMultiTurn([{ role: "user", parts: [{ text: prompt }] }], "Return JSON array of tasks.", false, schema);
+                
+                const tasksArr = JSON.parse(res.text);
+                if (Array.isArray(tasksArr)) {
+                    tasksArr.forEach(t => {
+                        if (t.taskTitle) {
+                            window.kanbanTasks.unshift({
+                                id: Date.now().toString() + Math.random().toString(36).substr(2,3),
+                                text: `[${clip.shortId}] ${t.taskTitle}`,
+                                status: 'todo'
+                            });
+                        }
+                    });
+                    saveLocalKanban();
+                    renderKanban();
+                    showToast("✅ টাস্ক ক্যানবানে যুক্ত করা হয়েছে!");
+                }
+            } catch (e) {
+                showToast("❌ টাস্ক তৈরিতে সমস্যা হয়েছে!");
+            }
+        }
+
+        async function aiReadAloudClip(id) {
+            const clip = window.clipsList.find(c => c.id === id);
+            if (!clip) return;
+            showToast("⏳ AI ভয়েস তৈরি হচ্ছে...");
+            try {
+                const audioUrl = await callGeminiTTS(clip.text.slice(0, 300));
+                const audio = new Audio(audioUrl);
+                audio.play();
+                showToast("🔊 প্লে হচ্ছে!");
+            } catch (e) {
+                if ('speechSynthesis' in window) {
+                    const utter = new SpeechSynthesisUtterance(clip.text.slice(0, 300));
+                    utter.lang = 'bn-BD';
+                    window.speechSynthesis.speak(utter);
+                    showToast("🔊 ব্রাউজার লোকাল ভয়েসে প্লে হচ্ছে!");
+                } else {
+                    showToast("❌ ভয়েস প্লে করা সম্ভব হয়নি!");
+                }
+            }
+        }
+
+        async function runAiImageGen() {
+            const input = document.getElementById('aiImagePrompt');
+            const prompt = input.value.trim();
+            if (!prompt) return showToast("ছবির বিবরণ লিখুন!");
+
+            const container = document.getElementById('aiImageResultContainer');
+            container.innerHTML = `
+                <div class="text-center py-12 text-accentGreen">
+                    <i class="fa-solid fa-arrows-rotate fa-spin text-4xl mb-3"></i>
+                    <p class="text-xs font-bold">Imagen 4.0 ছবি আঁকছে... (কিছু সময় লাগতে পারে)</p>
+                </div>
+            `;
+
+            try {
+                const imgUrl = await callGeminiImage(prompt);
+                container.innerHTML = `
+                    <div class="flex flex-col items-center gap-3 w-full">
+                        <img src="${imgUrl}" class="max-h-[350px] rounded-xl border border-slotborder shadow-2xl object-contain">
+                        <a href="${imgUrl}" download="ai-vault-image.png" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> ছবি ডাউনলোড করুন
+                        </a>
+                    </div>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="text-accentRed font-bold text-center py-8">❌ ছবি জেনারেট করতে ব্যর্থ হয়েছে!</div>`;
+            }
+        }
+
+        async function runAiTTS() {
+            const input = document.getElementById('ttsTextInput');
+            const voice = document.getElementById('ttsVoiceSelect').value;
+            const text = input.value.trim();
+            if (!text) return showToast("টেক্সট দিন!");
+
+            showToast("⏳ ভয়েস জেনারেট হচ্ছে...");
+            try {
+                const audioUrl = await callGeminiTTS(text, voice);
+                const playerBox = document.getElementById('ttsAudioPlayerBox');
+                const audioEl = document.getElementById('ttsAudioElement');
+                audioEl.src = audioUrl;
+                playerBox.classList.remove('hidden');
+                playerBox.classList.add('flex');
+                audioEl.play();
+                showToast("🔊 প্লে করা হচ্ছে!");
+            } catch (e) {
+                if ('speechSynthesis' in window) {
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = 'bn-BD';
+                    window.speechSynthesis.speak(utter);
+                    showToast("🔊 ব্রাউজার লোকাল ভয়েসে প্লে হচ্ছে!");
+                } else {
+                    showToast("❌ ভয়েস জেনারেট ফেইলড!");
+                }
+            }
+        }
+
+        async function aiGenerateMarkdownDraft() {
+            showCustomPrompt(
+                "AI মার্কডাউন ড্রাফট রাইটার",
+                "কোন বিষয়ে নোট বা টেকনিক্যাল আর্টিকেল লিখতে চান?",
+                "",
+                async (topic) => {
+                    showToast("⏳ Gemini মার্কডাউন লিখছে...");
+                    try {
+                        const promptText = `Write a well-formatted Markdown article in Bengali with headers, bullet points, and code blocks if applicable about: ${topic}`;
+                        const res = await callGeminiMultiTurn([{ role: "user", parts: [{ text: promptText }] }]);
+                        document.getElementById('markdownInput').value = res.text;
+                        updateMarkdownPreview();
+                        showToast("✅ ড্রাফট তৈরি সম্পন্ন!");
+                    } catch (e) {
+                        showToast("❌ ড্রাফট তৈরি করা যায়নি!");
+                    }
+                }
+            );
+        }
+
+        function togglePin(id) {
+            const item = window.clipsList.find(c => c.id === id);
+            if (item) {
+                item.pinned = !item.pinned;
+                saveLocalClips();
+                renderClips();
+                showToast(item.pinned ? "📌 পিন করা হয়েছে!" : "পিন সরানো হয়েছে!");
+            }
+        }
+
+        function copySingleText(id) {
+            const item = window.clipsList.find(c => c.id === id);
+            if (item) fallbackCopy(item.text, `📋 [${item.shortId}] কপি করা হয়েছে!`);
+        }
+
+        function deleteClip(id) {
+            window.clipsList = window.clipsList.filter(c => c.id !== id);
+            window.selectedClipIds.delete(id);
+            window.reindexShortIds();
+            saveLocalClips();
+            renderClips();
+            renderTagManager();
+            updateContextScopeBanner();
+            if (navigator.vibrate) navigator.vibrate(30);
+            showToast("🗑️ মুছে ফেলা হয়েছে!");
+        }
+
+        function clearLocalVault() {
+            if (window.clipsList.length === 0) return showToast("ভল্ট অলরেডি খালি!");
+            showCustomConfirm(
+                "লোকাল ভল্ট খালি করুন",
+                "সব লোকাল ক্লিপ কি সত্যি মুছে ফেলতে চান?",
+                () => {
+                    window.clipsList = [];
+                    window.selectedClipIds.clear();
+                    saveLocalClips();
+                    renderClips();
+                    renderTagManager();
+                    updateContextScopeBanner();
+                    showToast("সব ক্লিয়ার করা হয়েছে!");
+                }
+            );
+        }
+
+        function copyAllClips() {
+            if (window.clipsList.length === 0) return showToast("কোনো ডাটা নেই!");
+            const dump = window.clipsList.map(c => `--- [CLIP ${c.shortId} - TAGS: ${(c.tags || []).join(', ').toUpperCase()}] ---\n${c.text}\n`).join('\n');
+            fallbackCopy(dump, "সব ক্লিপ কপি হয়েছে!");
+        }
+
+        function updateMarkdownPreview() {
+            const raw = document.getElementById('markdownInput').value;
+            const preview = document.getElementById('markdownPreview');
+            if (typeof marked !== 'undefined') {
+                preview.innerHTML = marked.parse(raw);
+            } else {
+                preview.innerText = raw;
+            }
+            try {
+                localStorage.setItem(`l9_vault_notes_${window.currentVaultId}`, raw);
+            } catch(e) {}
+        }
+
+        function clearNoteEditor() {
+            document.getElementById('markdownInput').value = '';
+            updateMarkdownPreview();
+        }
+
+        function addKanbanTask() {
+            const input = document.getElementById('kanbanTaskInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            window.kanbanTasks.unshift({
+                id: Date.now().toString(),
+                text: val,
+                status: 'todo'
+            });
+
+            saveLocalKanban();
+            renderKanban();
+            input.value = '';
+            showToast("টাস্ক যুক্ত করা হয়েছে!");
+        }
+
+        function moveTask(id, newStatus) {
+            const task = window.kanbanTasks.find(t => t.id === id);
+            if (task) {
+                task.status = newStatus;
+                saveLocalKanban();
+                renderKanban();
+            }
+        }
+
+        function deleteKanbanTask(id) {
+            window.kanbanTasks = window.kanbanTasks.filter(t => t.id !== id);
+            saveLocalKanban();
+            renderKanban();
+        }
+
+        function renderKanban() {
+            const todoContainer = document.getElementById('kanban-todo');
+            const progressContainer = document.getElementById('kanban-progress');
+            const doneContainer = document.getElementById('kanban-done');
+
+            todoContainer.innerHTML = '';
+            progressContainer.innerHTML = '';
+            doneContainer.innerHTML = '';
+
+            let counts = { todo: 0, progress: 0, done: 0 };
+
+            (window.kanbanTasks || []).forEach(t => {
+                counts[t.status] = (counts[t.status] || 0) + 1;
+                const card = document.createElement('div');
+                card.className = "bg-slotbg p-3 rounded-lg border border-slotborder text-xs flex justify-between items-start gap-2 shadow";
+
+                let nextButtons = '';
+                if (t.status === 'todo') {
+                    nextButtons = `<button onclick="moveTask('${t.id}', 'progress')" class="text-accentCyan hover:underline">চালাও →</button>`;
+                } else if (t.status === 'progress') {
+                    nextButtons = `
+                        <button onclick="moveTask('${t.id}', 'todo')" class="text-gray-400 hover:underline">← ব্যাক</button>
+                        <button onclick="moveTask('${t.id}', 'done')" class="text-accentGreen hover:underline">শেষ →</button>
+                    `;
+                } else if (t.status === 'done') {
+                    nextButtons = `<button onclick="moveTask('${t.id}', 'progress')" class="text-accentCyan hover:underline">← আবার শুরু</button>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex-1 break-words">${t.text}</div>
+                    <div class="flex flex-col items-end gap-1 flex-shrink-0 text-[10px]">
+                        <div class="flex gap-2 font-bold">${nextButtons}</div>
+                        <button onclick="deleteKanbanTask('${t.id}')" class="text-accentRed hover:text-red-400"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+
+                if (t.status === 'todo') todoContainer.appendChild(card);
+                else if (t.status === 'progress') progressContainer.appendChild(card);
+                else if (t.status === 'done') doneContainer.appendChild(card);
+            });
+
+            document.getElementById('todoCount').innerText = counts.todo;
+            document.getElementById('progressCount').innerText = counts.progress;
+            document.getElementById('doneCount').innerText = counts.done;
+        }
+
+        function formatJSON() {
+            const area = document.getElementById('jsonInput');
+            try {
+                const parsed = JSON.parse(area.value);
+                area.value = JSON.stringify(parsed, null, 2);
+                showToast("JSON Formatted!");
+            } catch(e) {
+                showToast("❌ ইনভ্যালিড JSON টেক্সট!");
+            }
+        }
+
+        function minifyJSON() {
+            const area = document.getElementById('jsonInput');
+            try {
+                const parsed = JSON.parse(area.value);
+                area.value = JSON.stringify(parsed);
+                showToast("JSON Minified!");
+            } catch(e) {
+                showToast("❌ ইনভ্যালিড JSON টেক্সট!");
+            }
+        }
+
+        function encodeBase64() {
+            const area = document.getElementById('base64Input');
+            try {
+                area.value = btoa(unescape(encodeURIComponent(area.value)));
+                showToast("Base64 Encoded!");
+            } catch(e) {
+                showToast("এনকোডিং ত্রুটি!");
+            }
+        }
+
+        function decodeBase64() {
+            const area = document.getElementById('base64Input');
+            try {
+                area.value = decodeURIComponent(escape(atob(area.value)));
+                showToast("Base64 Decoded!");
+            } catch(e) {
+                showToast("❌ ইনভ্যালিড Base64 টেক্সট!");
+            }
+        }
+
+        function exportJSONBackup() {
+            const data = {
+                vaultId: window.currentVaultId,
+                clips: window.clipsList,
+                kanban: window.kanbanTasks,
+                notes: document.getElementById('markdownInput').value || '',
+                exportedAt: new Date().toISOString()
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `l9_vault_${window.currentVaultId}_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            showToast("ব্যাকআপ ডাউনলোড সম্পন্ন!");
+        }
+
+        function fallbackCopy(text, msg) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    if (navigator.vibrate) navigator.vibrate(30);
+                    showToast(msg);
+                }).catch(() => execCopy(text, msg));
+            } else {
+                execCopy(text, msg);
+            }
+        }
+
+        function execCopy(text, msg) {
+            const area = document.createElement('textarea');
+            area.value = text;
+            document.body.appendChild(area);
+            area.select();
+            try {
+                document.execCommand('copy');
+                if (navigator.vibrate) navigator.vibrate(30);
+                showToast(msg);
+            } catch(e) {
+                showToast("কপি ব্যর্থ!");
+            }
+            document.body.removeChild(area);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+            }, 2300);
+        }
+    </script>
+</body>
+</html>
+

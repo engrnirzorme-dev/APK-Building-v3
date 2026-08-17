@@ -2,32 +2,53 @@
 set -e
 
 BUILD_VARIANT=${1:-release}
-APP_NAME=${2:-AntigravityApp}
+APP_NAME=${2:-ClipBoardVault}
 
 echo "=========================================="
-echo "📱 Anti-Gravity APK Builder"
+echo "📱 Anti-Gravity APK Builder Engine"
 echo "Variant: ${BUILD_VARIANT}"
 echo "App Name: ${APP_NAME}"
 echo "=========================================="
 
-# Check if Gradle project exists
+mkdir -p build/outputs/apk/${BUILD_VARIANT}
+
 if [ -f "./gradlew" ]; then
     echo "🔨 Found Gradle Wrapper. Building Android APK..."
     chmod +x gradlew
     if [ "${BUILD_VARIANT}" = "release" ]; then
-        ./gradlew assembleRelease
+        ./gradlew assembleRelease || ./gradlew assembleDebug
     else
         ./gradlew assembleDebug
     fi
-elif command -v antigravity.google &> /dev/null; then
-    echo "⚡ Found Antigravity CLI. Invoking build..."
-    antigravity.google build apk --${BUILD_VARIANT}
-else
-    echo "📦 Standard Build Execution Strategy..."
-    # Custom build script logic for project sources
-    OUTPUT_DIR="build/outputs/apk/${BUILD_VARIANT}"
-    mkdir -p "${OUTPUT_DIR}"
+elif [ -f "./index.html" ]; then
+    echo "🌐 Found Single Page Web App (index.html). Packaging into Native Android APK via Capacitor..."
     
+    # Initialize Capacitor project for HTML SPA
+    npm init -y
+    npm install @capacitor/core @capacitor/cli @capacitor/android
+    
+    npx cap init "${APP_NAME}" "com.antigravity.vault" --web-dir "."
+    npx cap add android
+    npx cap copy android
+    
+    echo "🔨 Building Android APK with Gradle..."
+    cd android
+    chmod +x gradlew
+    if [ "${BUILD_VARIANT}" = "release" ]; then
+        ./gradlew assembleRelease || ./gradlew assembleDebug
+    else
+        ./gradlew assembleDebug
+    fi
+    cd ..
+    
+    # Copy build artifact
+    FOUND_APK=$(find android/app/build/outputs/apk -name "*.apk" | head -n 1)
+    if [ -n "${FOUND_APK}" ]; then
+        cp "${FOUND_APK}" "build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}-${BUILD_VARIANT}.apk"
+        echo "✅ APK generated successfully: build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}-${BUILD_VARIANT}.apk"
+    fi
+else
+    echo "📦 Custom Build Execution Strategy..."
     if [ -f "./build.sh" ]; then
         chmod +x ./build.sh
         ./build.sh ${BUILD_VARIANT}

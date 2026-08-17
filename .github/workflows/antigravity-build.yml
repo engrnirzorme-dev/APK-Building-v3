@@ -30,30 +30,17 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-          cache: 'gradle'
 
       - name: 3. Setup Android SDK Environment
         uses: android-actions/setup-android@v3
 
-      - name: 4. Restore Gradle & Anti-Gravity Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            ~/.antigravity
-          key: ${{ runner.os }}-antigravity-${{ hashFiles('**/*.gradle*', '**/build_config.json') }}
-          restore-keys: |
-            ${{ runner.os }}-antigravity-
-
-      - name: 5. Inject & Initialize Anti-Gravity CLI
+      - name: 4. Inject & Initialize Anti-Gravity CLI
         env:
           ANTI_GRAVITY_TOKEN: ${{ secrets.ANTI_GRAVITY_TOKEN }}
         run: |
           echo "🚀 Initializing Anti-Gravity CLI Environment..."
           mkdir -p ~/.antigravity/bin
           
-          # Check if custom setup script exists
           if [ -f "./scripts/setup_env.sh" ]; then
             chmod +x ./scripts/setup_env.sh
             ./scripts/setup_env.sh
@@ -62,24 +49,21 @@ jobs:
             java -version
           fi
 
-      - name: 6. Execute Anti-Gravity APK Build
+      - name: 5. Execute Anti-Gravity APK Build
         env:
           BUILD_TYPE: ${{ inputs.build_type }}
           APP_NAME: ${{ inputs.app_name }}
           ANTI_GRAVITY_TOKEN: ${{ secrets.ANTI_GRAVITY_TOKEN }}
         run: |
           echo "🔨 Starting APK Build for Variant: ${BUILD_TYPE}..."
-          mkdir -p build/outputs/apk/release build/outputs/apk/debug
+          mkdir -p build/outputs/apk/${BUILD_TYPE}
           
           if [ -f "./scripts/build_apk.sh" ]; then
             chmod +x ./scripts/build_apk.sh
             ./scripts/build_apk.sh ${BUILD_TYPE} "${APP_NAME}"
-          else
-            echo "Executing fallback build..."
-            # Placeholder/fallback build step
           fi
 
-      - name: 7. Upload Build Artifacts (APK)
+      - name: 6. Upload Build Artifacts (APK)
         uses: actions/upload-artifact@v4
         with:
           name: AntiGravity-APK-${{ inputs.app_name }}-${{ inputs.build_type }}
@@ -88,7 +72,7 @@ jobs:
             **/*.apk
           retention-days: 5
 
-      - name: 8. Build Completion Report
+      - name: 7. Build Completion Report
         if: always()
         run: |
           echo "✅ Build Process Completed!"

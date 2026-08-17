@@ -14,7 +14,7 @@ on:
       app_name:
         description: 'App Name / Blueprint Identifier'
         required: false
-        default: 'AntigravityApp'
+        default: 'ClipBoardVault'
 
 jobs:
   build-apk:
@@ -25,11 +25,11 @@ jobs:
       - name: 1. Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 2. Setup Java 17 (Zulu Distribution)
+      - name: 2. Setup Java 21 (Zulu Distribution)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: 3. Setup Android SDK Environment
         uses: android-actions/setup-android@v3

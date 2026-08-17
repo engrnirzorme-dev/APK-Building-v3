@@ -129,6 +129,11 @@
                     <i class="fa-solid fa-code text-base"></i>
                     <span>🛠️ জেসন ও ডেভ টুলস</span>
                 </button>
+
+                <button onclick="switchTab('settings')" id="tab-settings" class="nav-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold text-xs transition-all text-gray-400 hover:bg-slotbg hover:text-gray-200">
+                    <i class="fa-solid fa-gear text-base text-accentYellow"></i>
+                    <span>⚙️ সেটিংস ও ক্রেডেনশিয়াল</span>
+                </button>
             </nav>
         </div>
 
@@ -543,6 +548,28 @@
                 <textarea id="base64Input" rows="4" class="w-full bg-slotbg border border-slotborder rounded-lg p-3 text-xs font-mono text-gray-200 outline-none focus:border-accentPink" placeholder="টেক্সট পেস্ট করুন এনকোড বা ডিকোড করতে..."></textarea>
             </div>
         </section>
+
+        <section id="view-settings" class="view-panel hidden flex-1 flex flex-col p-3 md:p-4 overflow-y-auto space-y-4 md:space-y-6 custom-scrollbar">
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="font-bold text-sm text-accentYellow flex items-center justify-between">
+                    <span><i class="fa-solid fa-fire"></i> Firebase Configuration</span>
+                </div>
+                <textarea id="settingsFirebaseConfig" rows="8" class="w-full bg-slotbg border border-slotborder rounded-lg p-3 text-xs font-mono text-gray-200 outline-none focus:border-accentYellow" placeholder='{\n  "apiKey": "AIzaSy...",\n  "authDomain": "...",\n  "projectId": "...",\n  "storageBucket": "...",\n  "messagingSenderId": "...",\n  "appId": "..."\n}'></textarea>
+                <div class="text-[10px] text-gray-400">আপনার Firebase Project Settings থেকে Web App Configuration JSON কপি করে এখানে পেস্ট করুন।</div>
+            </div>
+
+            <div class="bg-cardbg border border-slotborder rounded-xl p-4 space-y-3">
+                <div class="font-bold text-sm text-accentCyan flex items-center justify-between">
+                    <span><i class="fa-solid fa-key"></i> Gemini API Key</span>
+                </div>
+                <input type="password" id="settingsGeminiKey" class="w-full bg-slotbg border border-slotborder rounded-lg p-3 text-xs font-mono text-gray-200 outline-none focus:border-accentCyan" placeholder="AIzaSy...">
+                <div class="text-[10px] text-gray-400">Google AI Studio থেকে প্রাপ্ত আপনার Gemini API Key এখানে প্রদান করুন।</div>
+            </div>
+
+            <button onclick="saveAllSettings()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-3 rounded-lg shadow transition w-full flex items-center justify-center gap-2">
+                <i class="fa-solid fa-save"></i> ক্রেডেনশিয়াল সংরক্ষণ করুন ও রিলোড করুন
+            </button>
+        </section>
     </main>
 
     <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-accentGreen text-darkbg font-black text-xs px-4 py-2.5 rounded-xl shadow-2xl z-50 transition-all opacity-0 pointer-events-none transform translate-y-4">
@@ -821,11 +848,30 @@
             statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-accentOrange"></i> <span>আনসিঙ্কড পরিবর্তন</span>`;
         }
 
+        window.saveAllSettings = function() {
+            const fbConf = document.getElementById('settingsFirebaseConfig').value.trim();
+            const geminiKey = document.getElementById('settingsGeminiKey').value.trim();
+            if(fbConf) localStorage.setItem('l9_firebase_config_json', fbConf);
+            if(geminiKey) localStorage.setItem('l9_gemini_api_key', geminiKey);
+            showToast('✅ সেটিংস সফলভাবে সেভ হয়েছে!');
+            setTimeout(() => window.location.reload(), 1000);
+        };
+
+        window.loadSettingsToUI = function() {
+            const fbConf = localStorage.getItem('l9_firebase_config_json');
+            const geminiKey = localStorage.getItem('l9_gemini_api_key');
+            if(fbConf) document.getElementById('settingsFirebaseConfig').value = fbConf;
+            if(geminiKey) document.getElementById('settingsGeminiKey').value = geminiKey;
+        };
+
         async function initFirebase() {
             const statusEl = document.getElementById('cloudStatus');
             try {
                 let config = {};
-                if (typeof __firebase_config !== 'undefined') {
+                const localFbConfig = localStorage.getItem('l9_firebase_config_json');
+                if (localFbConfig) {
+                    config = JSON.parse(localFbConfig);
+                } else if (typeof __firebase_config !== 'undefined') {
                     config = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
                 } else {
                     // Fallback to local offline mode gracefully
@@ -1018,12 +1064,13 @@
         renderKanban();
         renderTagManager();
         updateContextScopeBanner();
+        loadSettingsToUI();
         initFirebase();
     </script>
 
     <script>
         async function callGeminiMultiTurn(contentsArray, systemInstruction = "", useSearch = false, responseSchema = null) {
-            const apiKey = "";
+            const apiKey = localStorage.getItem('l9_gemini_api_key') || "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
             const payload = {
@@ -1073,7 +1120,7 @@
         }
 
         async function callGeminiImage(prompt) {
-            const apiKey = "";
+            const apiKey = localStorage.getItem('l9_gemini_api_key') || "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
             const payload = {
                 instances: [{ prompt: prompt }],
@@ -1103,7 +1150,7 @@
         }
 
         async function callGeminiTTS(text, voiceName = "Kore") {
-            const apiKey = "";
+            const apiKey = localStorage.getItem('l9_gemini_api_key') || "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: text }] }],
@@ -2274,7 +2321,7 @@ ${vaultPayload}`;
             window.reindexShortIds();
             saveLocalClips();
             renderClips();
-            renderTagManager();
+            renderKanban();
             updateContextScopeBanner();
             if (navigator.vibrate) navigator.vibrate(30);
             showToast("🗑️ মুছে ফেলা হয়েছে!");

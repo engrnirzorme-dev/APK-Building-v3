@@ -23,13 +23,20 @@ if [ -f "./gradlew" ]; then
 elif [ -f "./index.html" ]; then
     echo "🌐 Found Single Page Web App (index.html). Packaging into Native Android APK via Capacitor..."
     
-    # Initialize Capacitor project for HTML SPA
+    # Prepare web assets directory
+    mkdir -p www
+    cp -r index.html www/ 2>/dev/null || true
+    cp -r assets www/ 2>/dev/null || true
+    cp -r css www/ 2>/dev/null || true
+    cp -r js www/ 2>/dev/null || true
+    
+    # Initialize Capacitor project with www web-dir
     npm init -y
     npm install @capacitor/core @capacitor/cli @capacitor/android
     
-    npx cap init "${APP_NAME}" "com.antigravity.vault" --web-dir "."
+    npx cap init "${APP_NAME}" "com.antigravity.vault" --web-dir "www"
     npx cap add android
-    npx cap copy android
+    npx cap sync android
     
     echo "🔨 Building Android APK with Gradle..."
     cd android

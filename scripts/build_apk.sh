@@ -51,6 +51,13 @@ elif [ -f "./index.html" ]; then
         cp "${FOUND_APK}" "build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}.apk"
         cp "${FOUND_APK}" "build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}-${BUILD_VARIANT}.apk"
         echo "✅ Signed APK generated successfully: build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}.apk"
+        echo "📦 APK Size: $(du -h build/outputs/apk/${BUILD_VARIANT}/${APP_NAME}.apk | cut -f1)"
+        echo "✅ APK Ready for Download!"
+    else
+        echo "❌ ERROR: APK file not found in android/app/build/outputs/apk"
+        echo "🔍 Searching for any APK files in the entire project..."
+        find . -name "*.apk" -type f 2>/dev/null || echo "No APK files found anywhere"
+        exit 1
     fi
 else
     echo "📦 Custom Build Execution Strategy..."
